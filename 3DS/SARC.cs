@@ -228,6 +228,15 @@ namespace _3DS
 			return res;
 		}
 
+        public bool checkHashExists(uint Hash)
+        {
+            foreach(var v in SFat.Entries)
+            {
+                if (v.FileNameHash == Hash) return true;
+            }
+            return false;
+        }
+
 		public SFSDirectory ToFileSystem()
 		{
 			SFSDirectory Root = new SFSDirectory("/", true);
@@ -251,6 +260,17 @@ namespace _3DS
 			SFat = new SFAT();
 			SFat.NrEntries = (ushort)Root.Files.Count;
 			uint DataStart = 0;
+            Root.Files.Sort(delegate (SFSFile a, SFSFile b) {
+                uint hashA;
+                if (a.FileName == string.Format("0x{0:X8}", a.FileID)) hashA = (uint)a.FileID;
+                else hashA = GetHashFromName(a.FileName);
+
+                uint hashB;
+                if (b.FileName == string.Format("0x{0:X8}", b.FileID)) hashB = (uint)b.FileID;
+                else hashB = GetHashFromName(b.FileName);
+
+                return hashA.CompareTo(hashB);
+            });
 			foreach (var v in Root.Files)
 			{
 				while ((DataStart % 128) != 0) DataStart++;
@@ -272,10 +292,10 @@ namespace _3DS
 			while ((Header.FileSize % 128) != 0) Header.FileSize++;
 			Header.FileDataOffset = Header.FileSize;
 			Header.FileSize += (uint)Data.Length;
-		        }
+		}
 
-            public class SARCIdentifier : FileFormatIdentifier
-            {
+        public class SARCIdentifier : FileFormatIdentifier
+        {
             public override string GetCategory()
             {
             return Category_Archives;

@@ -43,6 +43,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tao.OpenGl, Version=2.1.0.12, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\TaoFramework\bin\Tao.OpenGl.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Platform.Windows, Version=1.0.0.5, Culture=neutral, PublicKeyToken=701104b2da67a104, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\TaoFramework\bin\Tao.Platform.Windows.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bnr.cs" />
@@ -158,6 +166,12 @@
     <Compile Include="UI\CMDLViewer.Designer.cs">
       <DependentUpon>CMDLViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\SARCFileAdd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\SARCFileAdd.Designer.cs">
+      <DependentUpon>SARCFileAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\SAHTViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -246,11 +260,15 @@
     <EmbeddedResource Include="UI\CMDLViewer.resx">
       <DependentUpon>CMDLViewer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\SARCFileAdd.resx">
+      <DependentUpon>SARCFileAdd.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\SAHTViewer.resx">
       <DependentUpon>SAHTViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SARCViewer.resx">
       <DependentUpon>SARCViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SMDHViewer.resx">
       <DependentUpon>SMDHViewer.cs</DependentUpon>
@@ -270,6 +288,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="NintendoWare\GFX\Shaders\CGFXFrag.c" />
+    <None Include="Resources\plus.png" />
     <None Include="Resources\lighthouse-shine.png" />
     <None Include="Resources\light-bulb.png" />
     <None Include="Resources\weather-cloud.png" />

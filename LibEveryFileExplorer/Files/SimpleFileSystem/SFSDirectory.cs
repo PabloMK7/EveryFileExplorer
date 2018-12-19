@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace LibEveryFileExplorer.Files.SimpleFileSystem
 {
@@ -127,16 +128,15 @@ namespace LibEveryFileExplorer.Files.SimpleFileSystem
 
 		public ListViewItem[] GetContent()
 		{
-			List<ListViewItem> Items = new List<ListViewItem>();
-			foreach (var v in SubDirectories)
-			{
-				Items.Add(new ListViewItem(v.DirectoryName, "Folder") { Tag = "Folders" });
-			}
-			foreach (var v in Files)
-			{
-				Items.Add(EveryFileExplorerUtil.GetFileItem(new EFESFSFile(v)));
-			}
-			return Items.ToArray();
+            ListViewItem[] Items = new ListViewItem[SubDirectories.Count + Files.Count];
+            for(int i = 0; i < SubDirectories.Count; i++)
+            {
+                Items[i] = new ListViewItem(SubDirectories[i].DirectoryName, "Folder") { Tag = "Folders" };
+            }
+            Parallel.For(0, Files.Count, index => {
+                Items[SubDirectories.Count + index] = EveryFileExplorerUtil.GetFileItem(new EFESFSFile(Files[index]));
+            });
+            return Items;
 		}
 
 		public SFSDirectory GetDirectoryByPath(String Path)
@@ -238,6 +238,7 @@ namespace LibEveryFileExplorer.Files.SimpleFileSystem
 		{
 			foreach (var v in Files)
 			{
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Path + "\\" + v.FileName));
 				System.IO.File.Create(Path + "\\" + v.FileName).Close();
 				System.IO.File.WriteAllBytes(Path + "\\" + v.FileName, v.Data);
 			}

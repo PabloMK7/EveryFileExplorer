@@ -117,6 +117,9 @@ namespace _3DS
 				this.Name = Name;
 				Hash = SARC.GetHashFromName(Name, 0x65);
 			}
+
+            public SAHTEntry() { }
+
 			public SAHTEntry(EndianBinaryReader er)
 			{
 				Hash = er.ReadUInt32();
@@ -133,10 +136,29 @@ namespace _3DS
 			public String Name;
 		}
 
-		public SAHTEntry GetEntryByHash(UInt32 Hash)
+        public void SortEntriesByHash()
+        {
+            Entries.Sort(delegate (SAHTEntry a, SAHTEntry b)
+            {
+                return a.Hash.CompareTo(b.Hash);
+            });
+        }
+
+        public class SARCHashComparer : IComparer<SAHTEntry>
+        {
+
+            public int Compare(SAHTEntry x, SAHTEntry y)
+            {
+                return x.Hash.CompareTo(y.Hash);
+            }
+
+        }
+
+        public SAHTEntry GetEntryByHash(UInt32 Hsh)
 		{
-			foreach (var v in Entries) if (v.Hash == Hash) return v;
-			return null;
+            int index = Entries.BinarySearch(new SAHTEntry { Hash = Hsh }, new SARCHashComparer());
+            if (index < 0) return null;
+            else return Entries[index];
 		}
 
 		public SAHTEntry GetEntryByName(String Name)

@@ -15,7 +15,8 @@ namespace _3DS.UI
 		public SAHTViewer(SARCHashTable HashTable)
 		{
 			this.HashTable = HashTable;
-			InitializeComponent();
+            HashTable.SortEntriesByHash();
+            InitializeComponent();
 		}
 
 		private void SAHTViewer_Load(object sender, EventArgs e)
@@ -50,6 +51,7 @@ namespace _3DS.UI
 				return;
 			}
 			HashTable.Entries.Add(new SARCHashTable.SAHTEntry(name));
+            HashTable.SortEntriesByHash();
 			UpdateEntries();
 		}
 
@@ -58,19 +60,5 @@ namespace _3DS.UI
 			HashTable.Entries.RemoveAt(listView1.SelectedIndices[0]);
 			UpdateEntries();
 		}
-
-		private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-		{
-			List<SARCHashTable.SAHTEntry> list = new List<SARCHashTable.SAHTEntry>();
-			foreach (var v in HashTable.Entries)
-			{
-				if (HashTable.GetEntryByHash(v.Hash) != v) continue;
-				list.Add(v);
-			}
-			HashTable.Entries = list;
-
-			HashTable.Entries.Sort((v1, v2) => v1.Name.CompareTo(v2.Name));
-			UpdateEntries();
-		}
-	}
+    }
 }

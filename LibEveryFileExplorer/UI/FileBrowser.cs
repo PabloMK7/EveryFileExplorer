@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace LibEveryFileExplorer.UI
 {
@@ -310,13 +311,54 @@ namespace LibEveryFileExplorer.UI
 		public delegate void OnRightClickEventHandler(Point Location);
 		public event OnRightClickEventHandler OnRightClick;
 
-		private void listView1_MouseClick(object sender, MouseEventArgs e)
+        public delegate void OnRightClickNonFileEventHandler(Point Location);
+        public event OnRightClickNonFileEventHandler OnRightClickNonFile;
+
+        private void listView1_MouseClick(object sender, MouseEventArgs e)
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
 				ListViewItem i = listView1.GetItemAt(e.X, e.Y);
-				if (i != null && OnRightClick != null) OnRightClick.Invoke(PointToClient(listView1.PointToScreen(e.Location)));
-			}
+                if (i != null && OnRightClick != null)
+                {
+                    OnRightClick.Invoke(PointToClient(listView1.PointToScreen(e.Location)));
+                    return;
+                }
+                else if (OnRightClickNonFile != null) OnRightClickNonFile.Invoke(PointToClient(listView1.PointToScreen(e.Location)));
+            }
 		}
-	}
+
+        private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            ToolStripTextBox sndr = (sender as ToolStripTextBox);
+            sndr.BackColor = SystemColors.Window;
+            if (sndr.Text.Equals(string.Empty))
+            {
+                foreach(ListViewItem i in listView1.Items)
+                {
+                    i.BackColor = Color.Transparent;
+                }
+                return;
+            }
+            Regex regex;
+            try
+            {
+                regex = new Regex(sndr.Text, RegexOptions.Compiled);
+            } catch
+            {
+                sndr.BackColor = Color.FromArgb(0xFF, 0x7F, 0x7F);
+                foreach (ListViewItem i in listView1.Items)
+                {
+                    i.BackColor = Color.Transparent;
+                }
+                return;
+            }
+            foreach(ListViewItem i in listView1.Items)
+            {
+                Match m = regex.Match(i.Text);
+                if (m.Success) i.BackColor = Color.FromArgb(0x7F, 0xFF, 0x7F);
+                else i.BackColor = SystemColors.Window;
+            }
+        }
+    }
 }
