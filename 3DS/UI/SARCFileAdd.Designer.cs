@@ -76,7 +76,7 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(261, 89);
+            this.cancelButton.Location = new System.Drawing.Point(262, 89);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 3;
@@ -87,7 +87,7 @@
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(180, 89);
+            this.okButton.Location = new System.Drawing.Point(181, 89);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 4;
@@ -133,6 +133,7 @@
             this.fromNameTextBox.Size = new System.Drawing.Size(237, 20);
             this.fromNameTextBox.TabIndex = 8;
             this.fromNameTextBox.TextChanged += new System.EventHandler(this.fromNameTextBox_TextChanged);
+            this.fromNameTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SARCFileAdd_KeyDown);
             // 
             // fromHashTextBox
             // 
@@ -144,6 +145,7 @@
             this.fromHashTextBox.Size = new System.Drawing.Size(237, 20);
             this.fromHashTextBox.TabIndex = 9;
             this.fromHashTextBox.TextChanged += new System.EventHandler(this.fromHashTextBox_TextChanged);
+            this.fromHashTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SARCFileAdd_KeyDown);
             // 
             // SARCFileAdd
             // 
@@ -165,6 +167,7 @@
             this.MinimumSize = new System.Drawing.Size(364, 163);
             this.Name = "SARCFileAdd";
             this.Text = "Add File";
+            this.Shown += new System.EventHandler(this.SARCFileAdd_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

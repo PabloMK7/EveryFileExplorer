@@ -182,7 +182,7 @@ namespace MarioKart.MK7
 				this.Normals = Normals.ToArray();
 				Planes = planes.ToArray();
 				Header = new MK7KCLHeader();
-				Octree = KCLOctree.FromTriangles(Triangles.ToArray(), Header, 2048, 128, 128, 50);
+				Octree = KCLOctree.FromTriangles(Triangles.ToArray(), Header, 2048, 128, 32, 10);
 				return true;
 			}
 			return false;

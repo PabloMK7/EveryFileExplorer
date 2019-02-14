@@ -15,9 +15,9 @@ namespace LibEveryFileExplorer.Files
 			this.File = File;
 			if (CreateNew) FileFormat = Format.InvokeMember("", System.Reflection.BindingFlags.CreateInstance, null, null, new object[0]);
 			else FileFormat = Format.InvokeMember("", System.Reflection.BindingFlags.CreateInstance, null, null, new object[] { File.Data });
-			Dialog = FileFormat.GetDialog();
-			Dialog.Tag = this;
-			Dialog.Text = File.Name;
+            Dialog = FileFormat.GetDialog();
+            Dialog.Tag = this;
+            Dialog.Text = File.Name;
 			Dialog.FormClosing += new FormClosingEventHandler(Dialog_FormClosing);
 		}
 

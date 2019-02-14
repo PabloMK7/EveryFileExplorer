@@ -19,12 +19,13 @@ namespace _3DS.UI
 		public SARCViewer(SARC Archive)
 		{
 			this.Archive = Archive;
-			Root = Archive.ToFileSystem();
 			InitializeComponent();
 		}
 
 		private void SARCViewer_Load(object sender, EventArgs e)
 		{
+            Archive.SarcFilename = (this.Tag as ViewableFile).File.Name;
+            Root = Archive.ToFileSystem();
             fileBrowser1.ShowAddFileButton = true;
             fileBrowser1.ShowDeleteButton = true;
             fileBrowser1.ShowRenameButton = true;
@@ -49,8 +50,15 @@ namespace _3DS.UI
 		{
 			var file = Root.GetFileByPath(fileBrowser1.SelectedPath);
 			if (file == null) return;
-			saveFileDialog1.Filter = "Binary File (*.bin)|*.bin|All Files (*.*)|*.*";//System.IO.Path.GetExtension(fileBrowser1.SelectedPath).Replace(".", "").ToUpper() + " Files (*" + System.IO.Path.GetExtension(fileBrowser1.SelectedPath).ToLower() + ")|*" + System.IO.Path.GetExtension(fileBrowser1.SelectedPath).ToLower() + "|All Files (*.*)|*.*";
-			saveFileDialog1.FileName = System.IO.Path.GetFileName(fileBrowser1.SelectedPath);
+            string fileExtension = System.IO.Path.GetExtension(file.FileName);
+            if (fileExtension == string.Empty)
+            {
+                saveFileDialog1.Filter = "Binary File (*.bin)|*.bin|All Files (*.*)|*.*";
+            } else
+            {
+                saveFileDialog1.Filter = fileExtension.Replace(".", " ").ToUpper() + " File (*" + fileExtension.ToLower() + ")|*" + fileExtension.ToLower() + ")|All Files (*.*)|*.*";
+            }
+            saveFileDialog1.FileName = System.IO.Path.GetFileName(fileBrowser1.SelectedPath);
 			if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK
 				&& saveFileDialog1.FileName.Length > 0)
 			{
@@ -130,10 +138,22 @@ namespace _3DS.UI
                         return;
                     }
                     SFSFile newfile = new SFSFile((Int32)fileAddDialog.calculatedHash, string.Format("0x{0:X8}", fileAddDialog.calculatedHash), Root);
+                    bool NameFound = false;
                     if (SARCHashTable.DefaultHashTable != null)
                     {
                         var vv = SARCHashTable.DefaultHashTable.GetEntryByHash(fileAddDialog.calculatedHash);
-                        if (vv != null) newfile.FileName = vv.Name;
+                        if (vv != null) { newfile.FileName = vv.Name; NameFound = true; }
+                    }
+                    if (Archive.SarcFilename != null && !NameFound) {
+                        var SarcName = System.IO.Path.GetFileNameWithoutExtension(Archive.SarcFilename);
+                        foreach (var ext in Archive.MK7_szs_extensions)
+                        {
+                            string vv = SarcName + ext;
+                            if (fileAddDialog.calculatedHash == Archive.GetHashFromName(vv))
+                            {
+                                newfile.FileName = vv;
+                            }
+                        }
                     }
                     newfile.Data = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
                     Root.Files.Add(newfile);
@@ -152,10 +172,23 @@ namespace _3DS.UI
             {
                 file.FileID = (Int32)fileAddDialog.calculatedHash;
                 file.FileName = string.Format("0x{0:X8}", fileAddDialog.calculatedHash);
+                bool NameFound = false;
                 if (SARCHashTable.DefaultHashTable != null)
                 {
                     var vv = SARCHashTable.DefaultHashTable.GetEntryByHash(fileAddDialog.calculatedHash);
-                    if (vv != null) file.FileName = vv.Name;
+                    if (vv != null) { file.FileName = vv.Name; NameFound = true; }
+                }
+                if (Archive.SarcFilename != null && !NameFound)
+                {
+                    var SarcName = System.IO.Path.GetFileNameWithoutExtension(Archive.SarcFilename);
+                    foreach (var ext in Archive.MK7_szs_extensions)
+                    {
+                        string vv = SarcName + ext;
+                        if (fileAddDialog.calculatedHash == Archive.GetHashFromName(vv))
+                        {
+                            file.FileName = vv;
+                        }
+                    }
                 }
                 Archive.FromFileSystem(Root);
                 fileBrowser1.UpdateDirectories(Root.GetTreeNodes(), true);

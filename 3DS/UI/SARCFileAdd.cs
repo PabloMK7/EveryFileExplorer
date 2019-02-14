@@ -94,5 +94,18 @@ namespace _3DS.UI
             }
             updateDisplayHash();
         }
+
+        private void SARCFileAdd_Shown(object sender, EventArgs e)
+        {
+            fromNameTextBox.Select();
+        }
+
+        private void SARCFileAdd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                okButton.PerformClick();
+            }
+        }
     }
 }
