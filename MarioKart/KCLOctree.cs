@@ -403,7 +403,7 @@ namespace MarioKart
         }
 
         public static KCLOctree FromTriangles(Triangle[] Triangles, KCLHeader Header, int MaxRootSize = 2048,
-            int MinRootSize = 128, int MinCubeSize = 32, int MaxNrTris = 10) //35)
+            int MinRootSize = 128, int MinCubeSize = 32, int MaxNrTris = 10, MK7.KCL.BGArgs userarg = null, System.ComponentModel.BackgroundWorker worker = null) //35)
         {
             Header.Unknown1 = 30;
             Header.Unknown2 = 25;
@@ -469,6 +469,14 @@ namespace MarioKart
             KCLOctree k = new KCLOctree();
             k.RootNodes = new KCLOctreeNode[NrX * NrY * NrZ];
             int i = 0;
+
+            if (userarg != null)
+            {
+                userarg.state = 2;
+                userarg.totProg = k.RootNodes.Length;
+                userarg.currProg = 0;
+            }
+
             for (int z = 0; z < NrZ; z++)
             {
                 for (int y = 0; y < NrY; y++)
@@ -478,6 +486,12 @@ namespace MarioKart
                         Vector3 pos = min + ((float) cubesize) * new Vector3(x, y, z);
                         k.RootNodes[i] = KCLOctreeNode.Generate(tt, pos, cubesize, MaxNrTris, MinCubeSize);
                         i++;
+                        if (userarg != null)
+                        {
+                            if (worker.CancellationPending) return null;
+                            userarg.currProg++;
+                            worker.ReportProgress(0, userarg);
+                        }
                     }
                 }
             }

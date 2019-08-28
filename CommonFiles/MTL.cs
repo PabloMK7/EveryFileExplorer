@@ -120,7 +120,7 @@ namespace CommonFiles
 			public String Name;
 			public Color DiffuseColor;
 			public Color AmbientColor;
-			public Color SpecularColor;
+            public Color SpecularColor;
 			public float Alpha = 1;
 
 			public String DiffuseMapPath;

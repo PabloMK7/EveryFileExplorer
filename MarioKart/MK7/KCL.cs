@@ -14,7 +14,16 @@ namespace MarioKart.MK7
 {
 	public class KCL : FileFormat<KCL.KCLIdentifier>, IConvertable, IFileCreatable, IViewable, IWriteable
 	{
-		public KCL()
+        public class BGArgs
+        {
+            public int state = 0;
+            public int currProg = 0;
+            public int totProg = 0;
+            public string filename = null;
+            public BGArgs() { }
+        }
+
+        public KCL()
 		{
 			Header = new MK7KCLHeader();
 		}
@@ -110,84 +119,105 @@ namespace MarioKart.MK7
 			switch (FilterIndex)
 			{
 				case 0:
-					OBJ o = ToOBJ();
+                    MTL mtl = null;
+					OBJ o = ToOBJ(out mtl);
+                    string mtlPath = Path.Replace(".obj", ".mtl");
+                    o.MTLPath = System.IO.Path.GetFileName(mtlPath);
 					byte[] d = o.Write();
+                    byte[] m = mtl.Write();
 					File.Create(Path).Close();
+                    File.Create(mtlPath).Close();
 					File.WriteAllBytes(Path, d);
+                    File.WriteAllBytes(mtlPath, m);
 					return true;
 				default:
 					return false;
 			}
 		}
 
-		public bool CreateFromFile()
-		{
-			System.Windows.Forms.OpenFileDialog f = new System.Windows.Forms.OpenFileDialog();
-			f.Filter = OBJ.Identifier.GetFileFilter();
-			if (f.ShowDialog() == System.Windows.Forms.DialogResult.OK
-				&& f.FileName.Length > 0)
-			{
-				OBJ o = new OBJ(File.ReadAllBytes(f.FileName));
-				List<String> matnames = new List<string>();
-				foreach (var v in o.Faces) if (!matnames.Contains(v.Material)) matnames.Add(v.Material);
-				UI.KCLCollisionTypeSelector ty = new UI.KCLCollisionTypeSelector(matnames.ToArray());
-				ty.DialogResult = System.Windows.Forms.DialogResult.None;
-				ty.ShowDialog();
-				while (ty.DialogResult != System.Windows.Forms.DialogResult.OK) ;
-				Dictionary<string, ushort> Mapping;
-				Dictionary<string, bool> Colli;
-				Mapping = ty.Mapping;
-				Colli = ty.Colli;
-				List<Vector3> Vertex = new List<Vector3>();
-				List<Vector3> Normals = new List<Vector3>();
-				List<KCLPlane> planes = new List<KCLPlane>();
-				List<Triangle> Triangles = new List<Triangle>();
-				foreach (var v in o.Faces)
-				{
-					if (Colli[v.Material])
-					{
-						Triangle t = new Triangle(o.Vertices[v.VertexIndieces[0]], o.Vertices[v.VertexIndieces[1]], o.Vertices[v.VertexIndieces[2]]);
-						Vector3 qq = (t.PointB - t.PointA).Cross(t.PointC - t.PointA);
-						if ((qq.X * qq.X + qq.Y * qq.Y + qq.Z * qq.Z) < 0.01) continue;
-						KCLPlane p = new KCLPlane();
-						p.CollisionType = Mapping[v.Material];
-						Vector3 a = (t.PointC - t.PointA).Cross(t.Normal);
-						a.Normalize();
-						a = -a;
-						Vector3 b = (t.PointB - t.PointA).Cross(t.Normal);
-						b.Normalize();
-						Vector3 c = (t.PointC - t.PointB).Cross(t.Normal);
-						c.Normalize();
-						p.Length = (t.PointC - t.PointA).Dot(c);
-						int q = ContainsVector3(t.PointA, Vertex);
-						if (q == -1) { p.VertexIndex = (ushort)Vertex.Count; Vertex.Add(t.PointA); }
-						else p.VertexIndex = (ushort)q;
-						q = ContainsVector3(t.Normal, Normals);
-						if (q == -1) { p.NormalIndex = (ushort)Normals.Count; Normals.Add(t.Normal); }
-						else p.NormalIndex = (ushort)q;
-						q = ContainsVector3(a, Normals);
-						if (q == -1) { p.NormalAIndex = (ushort)Normals.Count; Normals.Add(a); }
-						else p.NormalAIndex = (ushort)q;
-						q = ContainsVector3(b, Normals);
-						if (q == -1) { p.NormalBIndex = (ushort)Normals.Count; Normals.Add(b); }
-						else p.NormalBIndex = (ushort)q;
-						q = ContainsVector3(c, Normals);
-						if (q == -1) { p.NormalCIndex = (ushort)Normals.Count; Normals.Add(c); }
-						else p.NormalCIndex = (ushort)q;
-						planes.Add(p);
-						Triangles.Add(t);
-					}
-				}
-				Vertices = Vertex.ToArray();
-				this.Normals = Normals.ToArray();
-				Planes = planes.ToArray();
-				Header = new MK7KCLHeader();
-				Octree = KCLOctree.FromTriangles(Triangles.ToArray(), Header, 2048, 128, 32, 10);
-				return true;
-			}
-			return false;
-		}
+        public bool CreateFromFile()
+        {
+            System.Windows.Forms.OpenFileDialog f = new System.Windows.Forms.OpenFileDialog();
+            f.Filter = OBJ.Identifier.GetFileFilter();
+            if (f.ShowDialog() == System.Windows.Forms.DialogResult.OK
+                && f.FileName.Length > 0)
+            {
+                UI.KclWorking kclWork = new UI.KclWorking(this, f.FileName);
+                kclWork.ShowDialog();
+                if (kclWork.DialogResult == System.Windows.Forms.DialogResult.OK) return true;
+                else return false;
+            }
+            return false;
+        }
 
+		public bool BackGroundWorkerTask(System.ComponentModel.BackgroundWorker worker, object argument)
+		{
+            BGArgs userState = (BGArgs)argument;
+			OBJ o = new OBJ(File.ReadAllBytes(userState.filename));
+			List<String> matnames = new List<string>();
+			foreach (var v in o.Faces) if (!matnames.Contains(v.Material)) matnames.Add(v.Material);
+			UI.KCLCollisionTypeSelector ty = new UI.KCLCollisionTypeSelector(matnames.ToArray());
+			ty.DialogResult = System.Windows.Forms.DialogResult.None;
+			ty.ShowDialog();
+			while (ty.DialogResult != System.Windows.Forms.DialogResult.OK) ;
+			Dictionary<string, ushort> Mapping;
+			Dictionary<string, bool> Colli;
+			Mapping = ty.Mapping;
+			Colli = ty.Colli;
+			List<Vector3> Vertex = new List<Vector3>();
+			List<Vector3> Normals = new List<Vector3>();
+			List<KCLPlane> planes = new List<KCLPlane>();
+			List<Triangle> Triangles = new List<Triangle>();
+            userState.state = 1;
+            userState.currProg = 0;
+            userState.totProg = o.Faces.Count;
+			foreach (var v in o.Faces)
+			{
+				if (Colli[v.Material])
+				{
+					Triangle t = new Triangle(o.Vertices[v.VertexIndieces[0]], o.Vertices[v.VertexIndieces[1]], o.Vertices[v.VertexIndieces[2]]);
+					Vector3 qq = (t.PointB - t.PointA).Cross(t.PointC - t.PointA);
+					if ((qq.X * qq.X + qq.Y * qq.Y + qq.Z * qq.Z) < 0.01) continue;
+					KCLPlane p = new KCLPlane();
+					p.CollisionType = Mapping[v.Material];
+					Vector3 a = (t.PointC - t.PointA).Cross(t.Normal);
+					a.Normalize();
+					a = -a;
+					Vector3 b = (t.PointB - t.PointA).Cross(t.Normal);
+					b.Normalize();
+					Vector3 c = (t.PointC - t.PointB).Cross(t.Normal);
+					c.Normalize();
+					p.Length = (t.PointC - t.PointA).Dot(c);
+					int q = ContainsVector3(t.PointA, Vertex);
+					if (q == -1) { p.VertexIndex = (ushort)Vertex.Count; Vertex.Add(t.PointA); }
+					else p.VertexIndex = (ushort)q;
+					q = ContainsVector3(t.Normal, Normals);
+					if (q == -1) { p.NormalIndex = (ushort)Normals.Count; Normals.Add(t.Normal); }
+					else p.NormalIndex = (ushort)q;
+					q = ContainsVector3(a, Normals);
+					if (q == -1) { p.NormalAIndex = (ushort)Normals.Count; Normals.Add(a); }
+					else p.NormalAIndex = (ushort)q;
+					q = ContainsVector3(b, Normals);
+					if (q == -1) { p.NormalBIndex = (ushort)Normals.Count; Normals.Add(b); }
+					else p.NormalBIndex = (ushort)q;
+					q = ContainsVector3(c, Normals);
+					if (q == -1) { p.NormalCIndex = (ushort)Normals.Count; Normals.Add(c); }
+					else p.NormalCIndex = (ushort)q;
+					planes.Add(p);
+					Triangles.Add(t);
+				}
+                userState.currProg++;
+                worker.ReportProgress(0, userState);
+                if (worker.CancellationPending) return false;
+			}
+			Vertices = Vertex.ToArray();
+			this.Normals = Normals.ToArray();
+			Planes = planes.ToArray();
+			Header = new MK7KCLHeader();
+			Octree = KCLOctree.FromTriangles(Triangles.ToArray(), Header, 2048, 128, 32, 10, userState, worker);
+            if (Octree == null) return false;
+			return true;
+		}
 		private int ContainsVector3(Vector3 a, List<Vector3> b)
 		{
 			for (int i = 0; i < b.Count; i++)
@@ -286,10 +316,11 @@ namespace MarioKart.MK7
 			return new Triangle(A, B, C);
 		}
 
-		public OBJ ToOBJ()
+		public OBJ ToOBJ(out MTL mtl)
 		{
 			OBJ o = new OBJ();
 			int v = 0;
+            HashSet<String> matnames = new HashSet<string>();
 			foreach (var vv in Planes)
 			{
 				Triangle t = GetTriangle(vv);
@@ -297,13 +328,24 @@ namespace MarioKart.MK7
 				o.Vertices.Add(t.PointB);
 				o.Vertices.Add(t.PointC);
 				var f = new OBJ.OBJFace();
-				f.Material = vv.CollisionType.ToString("X");
+				f.Material = "mat_" + vv.CollisionType.ToString("X") + "_ID";
+                matnames.Add(f.Material);
 				f.VertexIndieces.Add(v);
 				f.VertexIndieces.Add(v + 1);
 				f.VertexIndieces.Add(v + 2);
 				o.Faces.Add(f);
 				v += 3;
 			}
+            mtl = new MTL();
+            Random r = new Random();
+            foreach(string s in matnames)
+            {
+                MTL.MTLMaterial m = new MTL.MTLMaterial(s);
+                m.AmbientColor = Color.Black;
+                m.SpecularColor = Color.FromArgb(85, 85, 85);
+                m.DiffuseColor = Color.FromArgb(r.Next(0, 255), r.Next(0, 255), r.Next(0, 255));
+                mtl.Materials.Add(m);
+            }
 			return o;
 		}
 

@@ -118,6 +118,12 @@
     <Compile Include="UI\CDMDViewer.Designer.cs">
       <DependentUpon>CDMDViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\KclWorking.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\KclWorking.Designer.cs">
+      <DependentUpon>KclWorking.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\MapViewer\MKDSObjectRenderGroup.cs" />
     <Compile Include="UI\MapViewer\MKDSRouteLineRenderGroup.cs" />
     <Compile Include="UI\MapViewer\MKDSAreaRenderGroup.cs" />
@@ -186,6 +192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\CDMDViewer.resx">
       <DependentUpon>CDMDViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\KclWorking.resx">
+      <DependentUpon>KclWorking.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\MKDSRouteViewer.resx">
       <DependentUpon>MKDSRouteViewer.cs</DependentUpon>

@@ -18,6 +18,7 @@ namespace CommonFiles
 			Normals = new List<Vector3>();
 			TexCoords = new List<Vector2>();
 			Faces = new List<OBJFace>();
+            areVerticesOptimized = false;
 		}
 
 		public OBJ(byte[] Data)
@@ -94,6 +95,7 @@ namespace CommonFiles
 				}
 			}
 			tr.Close();
+            optimizeVertexCount();
 		}
 
 		public string GetSaveDefaultFileFilter()
@@ -101,8 +103,34 @@ namespace CommonFiles
 			return "Wavefront OBJ File (*.obj)|*.obj";
 		}
 
+        public void optimizeVertexCount()
+        {
+            if (areVerticesOptimized) return;
+            List<Vector3> tmpList = new List<Vector3>();
+            for (int j = 0; j < Faces.Count; j++)
+            {
+                OBJFace c = Faces[j];
+                int count = c.VertexIndieces.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    int index = tmpList.FindIndex(v => v == Vertices[c.VertexIndieces[i]]);
+                    if (index == -1)
+                    {
+                        tmpList.Add(Vertices[c.VertexIndieces[i]]);
+                        c.VertexIndieces[i] = tmpList.Count - 1;
+                    } else
+                    {
+                        c.VertexIndieces[i] = index;
+                    }
+                }
+            }
+            Vertices = tmpList;
+            areVerticesOptimized = true;
+        }
+
 		public byte[] Write()
 		{
+            optimizeVertexCount();
 			StringBuilder b = new StringBuilder();
 			b.AppendLine("# Created by Every File Explorer");
 			b.AppendLine();
@@ -160,6 +188,8 @@ namespace CommonFiles
 		public List<Vector2> TexCoords;
 
 		public List<OBJFace> Faces;
+
+        private bool areVerticesOptimized;
 		public class OBJFace
 		{
 			public OBJFace()

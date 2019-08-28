@@ -56,7 +56,7 @@ namespace _3DS.UI
                 saveFileDialog1.Filter = "Binary File (*.bin)|*.bin|All Files (*.*)|*.*";
             } else
             {
-                saveFileDialog1.Filter = fileExtension.Replace(".", " ").ToUpper() + " File (*" + fileExtension.ToLower() + ")|*" + fileExtension.ToLower() + ")|All Files (*.*)|*.*";
+                saveFileDialog1.Filter = fileExtension.Replace(".", " ").ToUpper() + " File (*" + fileExtension.ToLower() + ")|*" + fileExtension.ToLower() + "|All Files (*.*)|*.*";
             }
             saveFileDialog1.FileName = System.IO.Path.GetFileName(fileBrowser1.SelectedPath);
 			if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK
