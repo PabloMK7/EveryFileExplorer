@@ -1,0 +1,322 @@
+<KCLInformations>
+	<KCLType id="00" name="Road 1" description="Solid road.">
+		<BasicEffect id="0" name="Normal"/>
+		<BasicEffect id="1" name="Sand/Gravel"/>
+		<BasicEffect id="2" name="Sand/Gravel"/>
+		<BasicEffect id="3" name="Smooth"/>
+		<BasicEffect id="4" name="Wood"/>
+		<BasicEffect id="5" name="Slot Based"/>
+		<BasicEffect id="6" name="Metal Grid"/>
+		<BasicEffect id="7" name="Metal"/>
+	</KCLType>
+	<KCLType id="01" name="Road 2" description="Solid road.">
+		<BasicEffect id="0" name="Normal (Alternate Sound)"/>
+		<BasicEffect id="1" name="Carpet"/>
+		<BasicEffect id="2" name="Slot Based"/>
+		<BasicEffect id="3" name="Bouncy (Non-trickable)"/>
+		<BasicEffect id="4" name="Grass/Gravel"/>
+		<BasicEffect id="5" name="Glass"/>
+		<BasicEffect id="6" name="Normal (Bump Effect)"/>
+		<BasicEffect id="7" name="Rainbow"/>
+	</KCLType>
+	<KCLType id="02" name="Road 3" description="Solid road.">
+		<BasicEffect id="0" name="Normal"/>
+		<BasicEffect id="1" name="Piano"/>
+		<BasicEffect id="2" name="Xylophone"/>
+		<BasicEffect id="3" name="Glockenspiel"/>
+		<BasicEffect id="4" name="Smooth (Bump Effect)"/>
+		<BasicEffect id="5" name="Slot Based"/>
+		<BasicEffect id="6" name="Metal Grid"/>
+		<BasicEffect id="7" name="Slot Based"/>
+	</KCLType>
+	<KCLType id="03" name="Road 4" description="Solid road.">
+		<BasicEffect id="0" name="Dirt Particles"/>
+		<BasicEffect id="1" name="Sand/Gravel"/>
+		<BasicEffect id="2" name="Slot Based"/>
+		<BasicEffect id="3" name="Slot Based"/>
+		<BasicEffect id="4" name="Slot Based"/>
+		<BasicEffect id="5" name="Snow"/>
+		<BasicEffect id="6" name="Dirt"/>
+		<BasicEffect id="7" name="Sand/Gravel"/>
+	</KCLType>
+	<KCLType id="04" name="Slippery Road 1" description="Slippery road, doesn't slow down karts.">
+		<BasicEffect id="0" name="Dirt Particles"/>
+		<BasicEffect id="1" name="Sand/Gravel"/>
+		<BasicEffect id="2" name="Carpet"/>
+		<BasicEffect id="3" name="Water"/>
+		<BasicEffect id="4" name="Grass"/>
+		<BasicEffect id="5" name="Wood"/>
+		<BasicEffect id="6" name="Mud (Bump Effect)"/>
+		<BasicEffect id="7" name="Dirt"/>
+	</KCLType>
+	<KCLType id="05" name="Off-road" description="Terrain that slows down karts.">
+		<BasicEffect id="0" name="Dirt"/>
+		<BasicEffect id="1" name="Sand"/>
+		<BasicEffect id="2" name="Honey"/>
+		<BasicEffect id="3" name="Water"/>
+		<BasicEffect id="4" name="Grass"/>
+		<BasicEffect id="5" name="Snow"/>
+		<BasicEffect id="6" name="Mud"/>
+		<BasicEffect id="7" name="Wood"/>
+	</KCLType>
+	<KCLType id="06" name="Heavy Off-road" description="Terrain that slows down karts a lot.">
+		<BasicEffect id="0" name="Dirt"/>
+		<BasicEffect id="1" name="Mud"/>
+		<BasicEffect id="2" name="Slot Based"/>
+		<BasicEffect id="3" name="Slot Based"/>
+		<BasicEffect id="4" name="Grass"/>
+		<BasicEffect id="5" name="Snow"/>
+		<BasicEffect id="6" name="Glass"/>
+		<BasicEffect id="7" name="Mud"/>
+	</KCLType>
+	<KCLType id="07" name="Slippery Road 2" description="Slippery road, doesn't slow down karts.">
+		<BasicEffect id="0" name="Ice"/>
+		<BasicEffect id="1" name="Mud"/>
+		<BasicEffect id="2" name="Wet Road"/>
+		<BasicEffect id="3" name="Water"/>
+		<BasicEffect id="4" name="Slot Based"/>
+		<BasicEffect id="5" name="Normal (Alternate Sound)"/>
+		<BasicEffect id="6" name="Normal (Alternate Sound)"/>
+		<BasicEffect id="7" name="Normal (Alternate Sound)"/>
+	</KCLType>
+	<KCLType id="08" name="Boost Pad" description="Provides a quick speed boost.">
+		<BasicEffect id="0" name="Normal"/>
+		<BasicEffect id="1" name="Sand/Gravel"/>
+		<BasicEffect id="2" name="Sand/Gravel"/>
+		<BasicEffect id="3" name="Smooth"/>
+		<BasicEffect id="4" name="Wood"/>
+		<BasicEffect id="5" name="Slot Based"/>
+		<BasicEffect id="6" name="Metal Grid"/>
+		<BasicEffect id="7" name="Metal"/>
+	</KCLType>
+	<KCLType id="09" name="Glider Pad" description="Activates glider.">
+		<BasicEffect id="0" name="Normal"/>
+		<BasicEffect id="1" name="Instant Glider Activation"/>
+		<BasicEffect id="2" name="Sand/Gravel"/>
+		<BasicEffect id="3" name="Slot Based"/>
+		<BasicEffect id="4" name="Sand/Gravel"/>
+		<BasicEffect id="5" name="Rainbow"/>
+		<BasicEffect id="6" name="Metal Grid"/>
+		<BasicEffect id="7" name="Metal"/>
+	</KCLType>
+	<KCLType id="10" name="Does Nothing" description="Does nothing. [?]">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="11" name="Solid Out Of Bounds" description="Solid terrain that respawns the kart.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="12" name="Moving Terrain" description="Moves karts, settings specified in the KMP.">
+		<BasicEffect id="0" name="Water"/>
+		<BasicEffect id="1" name="Conveyor Belt"/>
+		<BasicEffect id="2" name="Normal (Alternate Sound)"/>
+		<BasicEffect id="3" name="Normal (Alternate Sound)"/>
+		<BasicEffect id="4" name="Normal (Alternate Sound)"/>
+		<BasicEffect id="5" name="Normal (Alternate Sound)"/>
+		<BasicEffect id="6" name="Normal (Alternate Sound)"/>
+		<BasicEffect id="7" name="Normal (Alternate Sound)"/>
+	</KCLType>
+	<KCLType id="13" name="Road 5" description="Solid Road.">
+		<BasicEffect id="0" name="Slot Based"/>
+		<BasicEffect id="1" name="Airship Fortress Metal"/>
+		<BasicEffect id="2" name="Slot Based"/>
+		<BasicEffect id="3" name="Metal"/>
+		<BasicEffect id="4" name="Slot Based"/>
+		<BasicEffect id="5" name="Slot Based"/>
+		<BasicEffect id="6" name="Smooth"/>
+		<BasicEffect id="7" name="Smooth"/>
+	</KCLType>
+	<KCLType id="14" name="Unknown (Crashes)" description="Crashes if a kart comes in contact.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="15" name="Does nothing" description="Karts fall through it.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="16" name="Wall 1" description="Solid wall.">
+		<BasicEffect id="0" name="Normal"/>
+		<BasicEffect id="1" name="Rock"/>
+		<BasicEffect id="2" name="Metal"/>
+		<BasicEffect id="3" name="Wood"/>
+		<BasicEffect id="4" name="Slot Based"/>
+		<BasicEffect id="5" name="Slot Based"/>
+		<BasicEffect id="6" name="Rubber"/>
+		<BasicEffect id="7" name="Music"/>
+	</KCLType>
+	<KCLType id="17" name="Wall 2" description="Solid wall.">
+		<BasicEffect id="0" name="Rope"/>
+		<BasicEffect id="1" name="Glass"/>
+		<BasicEffect id="2" name="Glass"/>
+		<BasicEffect id="3" name="Balloon"/>
+		<BasicEffect id="4" name="Slot Based"/>
+		<BasicEffect id="5" name="Slot Based"/>
+		<BasicEffect id="6" name="Slot Based"/>
+		<BasicEffect id="7" name="Slot Based"/>
+	</KCLType>
+	<KCLType id="18" name="Kart Barrier" description="Blocks karts from moving but not items.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="19" name="Item Barrier" description="Blocks items from moving but not karts.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="20" name="Wall 3" description="Solid wall.">
+		<BasicEffect id="0" name="Normal"/>
+		<BasicEffect id="1" name="Rock"/>
+		<BasicEffect id="2" name="Metal"/>
+		<BasicEffect id="3" name="Wood"/>
+		<BasicEffect id="4" name="Slot Based"/>
+		<BasicEffect id="5" name="Glass"/>
+		<BasicEffect id="6" name="Rubber"/>
+		<BasicEffect id="7" name="Music"/>
+	</KCLType>
+	<KCLType id="21" name="Wall 4" description="Solid wall.">
+		<BasicEffect id="0" name="Normal"/>
+		<BasicEffect id="1" name="Rock"/>
+		<BasicEffect id="2" name="Metal"/>
+		<BasicEffect id="3" name="Wood"/>
+		<BasicEffect id="4" name="Slot Based"/>
+		<BasicEffect id="5" name="Glass"/>
+		<BasicEffect id="6" name="Rubber"/>
+		<BasicEffect id="7" name="Music"/>
+	</KCLType>
+	<KCLType id="22" name="Does nothing" description="Karts fall through it.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="23" name="Does nothing" description="Karts fall through it.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="24" name="Does nothing" description="Karts fall through it.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="25" name="Out Of Bounds 1" description="Causes the karts to fall and respawn.">
+		<BasicEffect id="0" name="Air"/>
+		<BasicEffect id="1" name="Water"/>
+		<BasicEffect id="2" name="Lava"/>
+		<BasicEffect id="3" name="Lava (No Splash)"/>
+		<BasicEffect id="4" name="Air"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Air"/>
+		<BasicEffect id="7" name="Air"/>
+	</KCLType>
+	<KCLType id="26" name="Effect Trigger 1" description="Triggers a visual effect.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Smoke/Fog"/>
+		<BasicEffect id="2" name="Leaves"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="27" name="Does nothing" description="Karts fall through it.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="28" name="Glider Activator" description="Not solid, activates glider automatically.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="29" name="Out Of Bounds 2" description="Causes the karts to fall and respawn.">
+		<BasicEffect id="0" name="Air"/>
+		<BasicEffect id="1" name="Water"/>
+		<BasicEffect id="2" name="Lava"/>
+		<BasicEffect id="3" name="Lava (No Splash)"/>
+		<BasicEffect id="4" name="Air"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Air"/>
+		<BasicEffect id="7" name="Air"/>
+	</KCLType>
+	<KCLType id="30" name="Does nothing" description="Karts fall through it.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Unknown"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+	<KCLType id="31" name="Effect Trigger 2" description="Triggers a visual effect.">
+		<BasicEffect id="0" name="Unknown"/>
+		<BasicEffect id="1" name="Flowerbed"/>
+		<BasicEffect id="2" name="Unknown"/>
+		<BasicEffect id="3" name="Unknown"/>
+		<BasicEffect id="4" name="Unknown"/>
+		<BasicEffect id="5" name="Unknown"/>
+		<BasicEffect id="6" name="Unknown"/>
+		<BasicEffect id="7" name="Unknown"/>
+	</KCLType>
+</KCLInformations>

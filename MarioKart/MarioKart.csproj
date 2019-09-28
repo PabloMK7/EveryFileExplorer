@@ -66,6 +66,7 @@
     <Compile Include="MK64\MIO0.cs" />
     <Compile Include="MK64\MK64.cs" />
     <Compile Include="MK7\CDAB.cs" />
+    <Compile Include="MK7\KCLInformations.cs" />
     <Compile Include="MK7\KMP\CAME.cs" />
     <Compile Include="MK7\KMP\CDMD.cs" />
     <Compile Include="MK7\KCL.cs" />

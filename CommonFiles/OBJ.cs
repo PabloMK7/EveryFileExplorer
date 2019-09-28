@@ -95,7 +95,7 @@ namespace CommonFiles
 				}
 			}
 			tr.Close();
-            optimizeVertexCount();
+            //optimizeVertexCount();
 		}
 
 		public string GetSaveDefaultFileFilter()
@@ -130,7 +130,7 @@ namespace CommonFiles
 
 		public byte[] Write()
 		{
-            optimizeVertexCount();
+            //optimizeVertexCount();
 			StringBuilder b = new StringBuilder();
 			b.AppendLine("# Created by Every File Explorer");
 			b.AppendLine();
