@@ -135,7 +135,7 @@ namespace MarioKart.MKDS
 				OBJ o = new OBJ(File.ReadAllBytes(f.FileName));
 				List<String> matnames = new List<string>();
 				foreach (var v in o.Faces) if (!matnames.Contains(v.Material)) matnames.Add(v.Material);
-				UI.KCLCollisionTypeSelector ty = new UI.KCLCollisionTypeSelector(matnames.ToArray());
+				UI.KCLCollisionTypeSelector ty = new UI.KCLCollisionTypeSelector(matnames.ToArray(), f.FileName);
 				ty.DialogResult = System.Windows.Forms.DialogResult.None;
 				ty.ShowDialog();
 				while (ty.DialogResult != System.Windows.Forms.DialogResult.OK) ;

@@ -156,7 +156,7 @@ namespace MarioKart.MK7
 			OBJ o = new OBJ(File.ReadAllBytes(userState.filename));
 			List<String> matnames = new List<string>();
 			foreach (var v in o.Faces) if (!matnames.Contains(v.Material)) matnames.Add(v.Material);
-			UI.KCLCollisionTypeSelector ty = new UI.KCLCollisionTypeSelector(matnames.ToArray());
+			UI.KCLCollisionTypeSelector ty = new UI.KCLCollisionTypeSelector(matnames.ToArray(), userState.filename);
             ty.loadMK7KCLInformations();
 			ty.DialogResult = System.Windows.Forms.DialogResult.None;
 			ty.ShowDialog();

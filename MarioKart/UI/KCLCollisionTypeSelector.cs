@@ -18,24 +18,24 @@ namespace MarioKart.UI
         public bool isRowUpdating;
         public bool isElementUpdating;
         public int currTableSelectedIndex;
+        public string objFileName;
         MK7.KCLInformationsHandler mk7kclinfo;
 
-        public KCLCollisionTypeSelector(string[] names)
+        public KCLCollisionTypeSelector(string[] names, string objFileName)
         {
             InitializeComponent();
+            this.objFileName = objFileName;
             isMK7 = false;
             isRowUpdating = false;
             isElementUpdating = false;
             currTableSelectedIndex = -1;
             enableMK7SpecificInfo(false);
             currKclValue = new KCLValue();
-            Mapping = new Dictionary<string, ushort>();
-            Colli = new Dictionary<string, bool>();
-            for (int i = 0; i < names.Length; i++)
+            mk7kclinfo = new MK7.KCLInformationsHandler();
+            (Mapping, Colli) = mk7kclinfo.getColIDForFile(objFileName, names);
+            foreach (var s in names)
             {
-                Mapping.Add(names[i], 0);
-                Colli.Add(names[i], true);
-                dataGridView1.Rows.Add(names[i], true, "0000");
+                dataGridView1.Rows.Add(s, Colli[s], string.Format("{0:X4}", Mapping[s], NumberStyles.HexNumber, CultureInfo.InvariantCulture));
             }
             if (Mapping.Count == 0)
             {
@@ -133,7 +133,6 @@ namespace MarioKart.UI
         public void loadMK7KCLInformations()
         {
             isMK7 = true;
-            mk7kclinfo = new MK7.KCLInformationsHandler();
             for (byte i = 0; i < 0x20; i++)
             {
                 typeComboBox.Items.Add(string.Format("0x{0:X2} - ", i) + mk7kclinfo.colInfo[i].Item1);
@@ -178,6 +177,7 @@ namespace MarioKart.UI
         private void kclType_FormClosing(object sender, FormClosingEventArgs e)
         {
             dataGridView1.EndEdit();
+            mk7kclinfo.saveColForFile(objFileName, Mapping, Colli);
         }
 
         public void updateTypeSpecificInfos()
