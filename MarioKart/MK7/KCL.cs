@@ -150,6 +150,15 @@ namespace MarioKart.MK7
             return false;
         }
 
+        public void roundVertexPositions(OBJ obj)
+        {
+            for(int i = 0; i < obj.Vertices.Count; i++)
+            {
+                Vector3 v = obj.Vertices[i];
+                obj.Vertices[i] = new Vector3((float)Math.Round(v.X), (float)Math.Round(v.Y), (float)Math.Round(v.Z));
+            }
+        }
+
 		public bool BackGroundWorkerTask(System.ComponentModel.BackgroundWorker worker, object argument)
 		{
             BGArgs userState = (BGArgs)argument;
@@ -161,7 +170,8 @@ namespace MarioKart.MK7
 			ty.DialogResult = System.Windows.Forms.DialogResult.None;
 			ty.ShowDialog();
 			while (ty.DialogResult != System.Windows.Forms.DialogResult.OK) ;
-			Dictionary<string, ushort> Mapping;
+            roundVertexPositions(o);
+            Dictionary<string, ushort> Mapping;
 			Dictionary<string, bool> Colli;
 			Mapping = ty.Mapping;
 			Colli = ty.Colli;
@@ -178,7 +188,7 @@ namespace MarioKart.MK7
 				{
 					Triangle t = new Triangle(o.Vertices[v.VertexIndieces[0]], o.Vertices[v.VertexIndieces[1]], o.Vertices[v.VertexIndieces[2]]);
 					Vector3 qq = (t.PointB - t.PointA).Cross(t.PointC - t.PointA);
-					if ((qq.X * qq.X + qq.Y * qq.Y + qq.Z * qq.Z) < 0.01) continue;
+					if ((qq.X * qq.X + qq.Y * qq.Y + qq.Z * qq.Z) < 0.1) continue;
 					KCLPlane p = new KCLPlane();
 					p.CollisionType = Mapping[v.Material];
 					Vector3 a = (t.PointC - t.PointA).Cross(t.Normal);

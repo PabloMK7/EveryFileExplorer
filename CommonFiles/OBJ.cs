@@ -105,6 +105,7 @@ namespace CommonFiles
 
         public void optimizeVertexCount()
         {
+            return;
             if (areVerticesOptimized) return;
             List<Vector3> tmpList = new List<Vector3>();
             for (int j = 0; j < Faces.Count; j++)
