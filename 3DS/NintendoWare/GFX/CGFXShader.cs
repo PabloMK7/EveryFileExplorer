@@ -345,13 +345,13 @@ namespace _3DS.NintendoWare.GFX
 					//frag_ss.AppendFormat("i2 = vec4({0}.rgb, {1}.a);\n", String.Format(p0[c_input2], Material.FragShader.TextureCombiners[i].Unknown3 & 0xF), String.Format(p0[a_input2], Material.FragShader.TextureCombiners[i].Unknown3 & 0xF));
 					//frag_ss.AppendFormat("i3 = vec4({0}.rgb, {1}.a);\n", String.Format(p0[c_input3], Material.FragShader.TextureCombiners[i].Unknown3 & 0xF), String.Format(p0[a_input3], Material.FragShader.TextureCombiners[i].Unknown3 & 0xF));
 
-					uint c_p1_1 = (Material.FragShader.TextureCombiners[i].Operands >> 0) & 0xF;
-					uint c_p1_2 = (Material.FragShader.TextureCombiners[i].Operands >> 4) & 0xF;
-					uint c_p1_3 = (Material.FragShader.TextureCombiners[i].Operands >> 8) & 0xF;
+					uint c_p1_1 = (uint)((Material.FragShader.TextureCombiners[i].OprRgb >> 0) & 0xF);
+					uint c_p1_2 = (uint)((Material.FragShader.TextureCombiners[i].OprRgb >> 4) & 0xF);
+					uint c_p1_3 = (uint)((Material.FragShader.TextureCombiners[i].OprRgb >> 8) & 0xF);
 
-					uint a_p1_1 = (Material.FragShader.TextureCombiners[i].Operands >> 12) & 0xF;
-					uint a_p1_2 = (Material.FragShader.TextureCombiners[i].Operands >> 16) & 0xF;
-					uint a_p1_3 = (Material.FragShader.TextureCombiners[i].Operands >> 20) & 0xF;
+					uint a_p1_1 = (uint)((Material.FragShader.TextureCombiners[i].OprAlpha >> 0) & 0xF);
+					uint a_p1_2 = (uint)((Material.FragShader.TextureCombiners[i].OprAlpha >> 4) & 0xF);
+					uint a_p1_3 = (uint)((Material.FragShader.TextureCombiners[i].OprAlpha >> 8) & 0xF);
 
 					frag_ss.AppendFormat("j1 = vec4({0}, {1});\n", String.Format(c_p1[c_p1_1], "i1c"), String.Format(a_p1[a_p1_1], "i1a"));
 					frag_ss.AppendFormat("j2 = vec4({0}, {1});\n", String.Format(c_p1[c_p1_2], "i2c"), String.Format(a_p1[a_p1_2], "i2a"));

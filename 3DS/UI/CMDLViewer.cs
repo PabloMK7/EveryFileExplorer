@@ -13,6 +13,7 @@ using LibEveryFileExplorer._3D;
 using LibEveryFileExplorer.Collections;
 using CommonFiles;
 using System.IO;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace _3DS.UI
 {
@@ -414,8 +415,32 @@ namespace _3DS.UI
 			}
 		}
 
-		private void toolStripButton1_Click(object sender, EventArgs e)
-		{
+        private void exportCmatButton_Click(object sender, EventArgs e)
+        {
+			CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+			dialog.IsFolderPicker = true;
+			if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+			{
+				int succcess = 0, failed = 0;
+				foreach(var mat in Model.Materials)
+                {
+					string filename = dialog.FileName + "\\" + mat.Name + ".cmat";
+					try
+                    {
+						CMATSave save = new CMATSave(mat);
+						save.Serialize(filename);
+						succcess++;
+					} catch (Exception)
+                    {
+						failed++;
+                    }
+                }
+				MessageBox.Show("Materials exported: " + succcess + "\nMaterials failed: " + failed, "Export Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+		}
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
 			saveFileDialog1.FileName = Model.Name;
 			if (saveFileDialog1.ShowDialog() == DialogResult.OK
 				&& saveFileDialog1.FileName.Length > 0)
@@ -473,5 +498,5 @@ namespace _3DS.UI
 				}
 			}
 		}
-	}
+    }
 }

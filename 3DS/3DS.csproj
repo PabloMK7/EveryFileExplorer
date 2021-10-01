@@ -37,6 +37,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -71,6 +80,8 @@
     <Compile Include="NintendoWare\GFX\CGFXGenerator.cs" />
     <Compile Include="NintendoWare\GFX\CGFXShader.cs" />
     <Compile Include="NintendoWare\GFX\CGFXWriterContext.cs" />
+    <Compile Include="NintendoWare\GFX\CMAT.cs" />
+    <Compile Include="NintendoWare\GFX\CMATSave.cs" />
     <Compile Include="NintendoWare\GFX\CMDL.cs" />
     <Compile Include="NintendoWare\GFX\DICT.cs" />
     <Compile Include="NintendoWare\GFX\PatriciaTreeGenerator.cs" />
@@ -291,6 +302,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="NintendoWare\GFX\Shaders\CGFXFrag.c" />
+    <None Include="packages.config" />
     <None Include="Resources\plus.png" />
     <None Include="Resources\lighthouse-shine.png" />
     <None Include="Resources\light-bulb.png" />

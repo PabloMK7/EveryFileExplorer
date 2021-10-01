@@ -952,7 +952,7 @@ namespace _3DS.NintendoWare.GFX
 					lresult.AddRange(BitConverter.GetBytes(WrapMapper[(Tex0.Unknown12 >> 8) & 0xF]));
 					lresult.AddRange(BitConverter.GetBytes(0f));
 					lresult.AddRange(BitConverter.GetBytes(v.LodBias));
-					lresult.AddRange(BitConverter.GetBytes(v.MinFilter));
+					lresult.AddRange(BitConverter.GetBytes((uint)v.MinFilter));
 					lresult.AddRange(BitConverter.GetBytes((uint)1));
 				}
 				if (Tex1 != null && Tex1.Sampler is TexInfo.StandardTextureSamplerCtr)
@@ -966,7 +966,7 @@ namespace _3DS.NintendoWare.GFX
 					lresult.AddRange(BitConverter.GetBytes(WrapMapper[(Tex1.Unknown12 >> 8) & 0xF]));
 					lresult.AddRange(BitConverter.GetBytes(0f));
 					lresult.AddRange(BitConverter.GetBytes(v.LodBias));
-					lresult.AddRange(BitConverter.GetBytes(v.MinFilter));
+					lresult.AddRange(BitConverter.GetBytes((uint)v.MinFilter));
 					lresult.AddRange(BitConverter.GetBytes((uint)1));
 				}
 				if (Tex2 != null && Tex2.Sampler is TexInfo.StandardTextureSamplerCtr)
@@ -980,7 +980,7 @@ namespace _3DS.NintendoWare.GFX
 					lresult.AddRange(BitConverter.GetBytes(WrapMapper[(Tex2.Unknown12 >> 8) & 0xF]));
 					lresult.AddRange(BitConverter.GetBytes(0f));
 					lresult.AddRange(BitConverter.GetBytes(v.LodBias));
-					lresult.AddRange(BitConverter.GetBytes(v.MinFilter));
+					lresult.AddRange(BitConverter.GetBytes((uint)v.MinFilter));
 					lresult.AddRange(BitConverter.GetBytes((uint)1));
 				}
 				er.Write(CGFXWriterContext.CalcHash(lresult.ToArray()));//TextureSamplersHash;
@@ -1256,10 +1256,16 @@ namespace _3DS.NintendoWare.GFX
 				{
 					PolygonOffsetEnabled = 1
 				}
+				public enum CullingModes : uint
+                {
+					FrontFace = 0,
+					BackFace = 1,
+					BothFaces = 3
+                }
 				public RasterizationCtr()
 				{
 					Flags = 0;
-					CullingMode = 3;
+					CullingMode = CullingModes.BothFaces;
 					PolygonOffsetUnit = 0;
 					Command1 = 0;
 					Command2 = 0x00010040;
@@ -1267,7 +1273,7 @@ namespace _3DS.NintendoWare.GFX
 				public RasterizationCtr(EndianBinaryReader er)
 				{
 					Flags = (RasterizationFlags)er.ReadUInt32();
-					CullingMode = er.ReadUInt32();
+					CullingMode = (CullingModes)er.ReadUInt32();
 					PolygonOffsetUnit = er.ReadSingle();
 					Command1 = er.ReadUInt32();
 					Command2 = er.ReadUInt32();
@@ -1275,7 +1281,7 @@ namespace _3DS.NintendoWare.GFX
 				public void Write(EndianBinaryWriter er)
 				{
 					er.Write((uint)Flags);
-					er.Write(CullingMode);
+					er.Write((uint)CullingMode);
 					er.Write(PolygonOffsetUnit);
 					er.Write(Command1);
 					er.Write(Command2);
@@ -1290,7 +1296,7 @@ namespace _3DS.NintendoWare.GFX
 					return CGFXWriterContext.CalcHash(Result);
 				}
 				public RasterizationFlags Flags;
-				public UInt32 CullingMode;
+				public CullingModes CullingMode;
 				public Single PolygonOffsetUnit;
 				public UInt32 Command1;
 				public UInt32 Command2;
@@ -1389,6 +1395,17 @@ namespace _3DS.NintendoWare.GFX
 						TestEnabled = 1,
 						MaskEnabled = 2
 					}
+					public enum DepthTestOperation
+					{
+						Never = 0,
+						Always = 1,
+						Equal = 2,
+						NotEqual = 3,
+						Less = 4,
+						Lequal = 5,
+						Greater = 6,
+						Gequal = 7
+					}
 					public DepthOperationCtr()
 					{
 						Flags = DepthFlags.TestEnabled | DepthFlags.MaskEnabled;
@@ -1414,6 +1431,13 @@ namespace _3DS.NintendoWare.GFX
 						er.Write(Command4);
 					}
 					public DepthFlags Flags;
+					public DepthTestOperation Operation
+                    {
+						get
+                        {
+							return (DepthTestOperation)((Command1 >> 4) & 0xF);
+                        }
+                    }
 					public UInt32 Command1;
 					public UInt32 Command2;
 					public UInt32 Command3;
@@ -1422,6 +1446,58 @@ namespace _3DS.NintendoWare.GFX
 				public BlendOperationCtr BlendOperation;
 				public class BlendOperationCtr
 				{
+					public enum BlendModes
+					{
+						NotUsed,
+						Blend,
+						SeparateBlend,
+						Logic,
+					}
+					public enum LogicOperations
+					{
+						Clear,
+						Copy,
+						NoOp,
+						Set,
+						CopyInverted,
+						Invert,
+						AndReverse,
+						OrReverse,
+						And,
+						Or,
+						Nand,
+						Nor,
+						Xor,
+						Equiv,
+						AndInverted,
+						OrInverted
+					}
+					public enum BlendEquations
+					{
+						FuncAdd,
+						FuncSubtract,
+						FuncReverseSubtract,
+						Min,
+						Max,
+					}
+					public enum BlendFactor
+					{
+						Zero,
+						One,
+						SourceColor,
+						OneMinusSourceColor,
+						DestinationColor,
+						OneMinusDestinationColor,
+						SourceAlpha,
+						OneMinusSourceAlpha,
+						DestinationAlpha,
+						OneMinusDestinationAlpha,
+						ConstantColor,
+						OneMinusConstantColor,
+						ConstantAlpha,
+						OneMinusConstantAlpha,
+						SourceAlphaSaturate,
+					}
 					public BlendOperationCtr()
 					{
 						Mode = 0;
@@ -1455,6 +1531,65 @@ namespace _3DS.NintendoWare.GFX
 						er.Write(Command5);
 						er.Write(Command6);
 					}
+
+					public BlendModes BlendMode
+                    {
+						get
+                        {
+							return (BlendModes)Mode;
+						}
+                    }
+					public LogicOperations LogicOperation
+                    {
+						get
+                        {
+							return (LogicOperations)(Command4 & 0xF);
+                        }
+                    }
+					public BlendEquations BlendEquationColor
+                    {
+						get
+						{
+							return (BlendEquations)(Command3 & 0xFF);
+						}
+                    }
+					public BlendEquations BlendEquationAlpha
+					{
+						get
+						{
+							return (BlendEquations)((Command3 >> 8) & 0xFF);
+						}
+					}
+
+					public BlendFactor ColorSource
+					{
+						get
+						{
+							return (BlendFactor)((Command3 >> 16) & 0xF);
+						}
+					}
+					public BlendFactor ColorDest
+					{
+						get
+						{
+							return (BlendFactor)((Command3 >> 20) & 0xF);
+						}
+					}
+					public BlendFactor AlphaSource
+					{
+						get
+						{
+							return (BlendFactor)((Command3 >> 24) & 0xF);
+						}
+					}
+					public BlendFactor AlphaDest
+					{
+						get
+						{
+							return (BlendFactor)((Command3 >> 28) & 0xF);
+						}
+					}
+
 					public UInt32 Mode;
 					public Vector4 BlendColor;//4 singles
 					public UInt32 Command1;
@@ -1556,10 +1691,24 @@ namespace _3DS.NintendoWare.GFX
 
 			public class TextureCoordinatorCtr
 			{
+				public enum MappingMethodOptions : uint
+                {
+					UV = 0,
+					Cube = 1,
+					Sphere = 2,
+					Projection = 3,
+					Shadow = 4
+                }
+				public enum MatrixModeOptions : uint
+                {
+					Maya = 0,
+					SoftImage = 1,
+					ThreeDSMax = 2
+                }
 				public TextureCoordinatorCtr()
 				{
 					SourceCoordinate = 0;
-					MappingMethod = 0;
+					MappingMethod = MappingMethodOptions.UV;
 					ReferenceCamera = 0;
 					MatrixMode = 0;
 					Scale = new Vector2(0, 0);
@@ -1571,9 +1720,9 @@ namespace _3DS.NintendoWare.GFX
 				public TextureCoordinatorCtr(EndianBinaryReader er)
 				{
 					SourceCoordinate = er.ReadUInt32();
-					MappingMethod = er.ReadUInt32();
+					MappingMethod = (MappingMethodOptions)er.ReadUInt32();
 					ReferenceCamera = er.ReadInt32();
-					MatrixMode = er.ReadUInt32();
+					MatrixMode = (MatrixModeOptions)er.ReadUInt32();
 					Scale = new Vector2(er.ReadSingle(), er.ReadSingle());
 					Rotate = er.ReadSingle();
 					Translate = new Vector2(er.ReadSingle(), er.ReadSingle());
@@ -1583,9 +1732,9 @@ namespace _3DS.NintendoWare.GFX
 				public void Write(EndianBinaryWriter er)
 				{
 					er.Write(SourceCoordinate);
-					er.Write(MappingMethod);
+					er.Write((uint)MappingMethod);
 					er.Write(ReferenceCamera);
-					er.Write(MatrixMode);
+					er.Write((uint)MatrixMode);
 					er.WriteVector2(Scale);
 					er.Write(Rotate);
 					er.WriteVector2(Translate);
@@ -1593,9 +1742,9 @@ namespace _3DS.NintendoWare.GFX
 					er.Write(Matrix, 0, 4 * 3);
 				}
 				public UInt32 SourceCoordinate;
-				public UInt32 MappingMethod;//0 = UV, 1 = Cube, 2 = Sphere, 3 = Projection, 4 = Shadow
+				public MappingMethodOptions MappingMethod;
 				public Int32 ReferenceCamera;
-				public UInt32 MatrixMode;
+				public MatrixModeOptions MatrixMode;
 				public Vector2 Scale;
 				public Single Rotate;
 				public Vector2 Translate;
@@ -1605,6 +1754,27 @@ namespace _3DS.NintendoWare.GFX
 
 			public class TexInfo
 			{
+				public enum TextureMinFilter : uint
+				{
+					Nearest = 0,
+					Linear = 1,
+					NearestMipmapNearest = 2,
+					NearestMipmapLinear = 3,
+					LinearMipmapNearest = 4,
+					LinearMipmapLinear = 5
+				}
+				public enum TextureMagFilter : byte
+				{
+					Nearest = 0,
+					Linear = 1
+				}
+				public enum TextureWrap : uint
+				{
+					ClampToEdge = 0,
+					ClampToBorder = 1,
+					Repeat = 2,
+					MirroredRepeat = 3
+				}
 				public TexInfo(String RefTex)
 				{
 					Type = 0x80000000;
@@ -1725,17 +1895,17 @@ namespace _3DS.NintendoWare.GFX
 				{
 					public TextureSamplerCtr()
 					{
-						MinFilter = 5;
+						MinFilter = TextureMinFilter.Linear;
 					}
 					public TextureSamplerCtr(EndianBinaryReader er)
 					{
 						Type = er.ReadUInt32();
 						OwnerOffset = (uint)(er.BaseStream.Position + er.ReadInt32());
-						MinFilter = er.ReadUInt32();
+						MinFilter = (TextureMinFilter)er.ReadUInt32();
 					}
 					public UInt32 Type;
 					public UInt32 OwnerOffset;
-					public UInt32 MinFilter;
+					public TextureMinFilter MinFilter;
 					public static TextureSamplerCtr FromStream(EndianBinaryReader er)
 					{
 						UInt32 Type = er.ReadUInt32();
@@ -1751,7 +1921,7 @@ namespace _3DS.NintendoWare.GFX
 					{
 						er.Write(Type);
 						er.Write((int)(OwnerOffset - er.BaseStream.Position));
-						er.Write(MinFilter);
+						er.Write(((uint)MinFilter));
 					}
 				}
 
@@ -1930,6 +2100,12 @@ namespace _3DS.NintendoWare.GFX
 						UseGeometricFactor1 = 16,
 						UseReflection = 32
 					}
+					public enum FragmentLightingBumpMode : uint
+                    {
+						NotUsed = 0,
+						AsBump = 1,
+						AsTangent = 2
+					}
 					public FragmentLightingCtr()
 					{
 						IsBumpRenormalize = false;
@@ -2085,10 +2261,28 @@ namespace _3DS.NintendoWare.GFX
 					public LightingLookupTableCtr FresnelSampler;
 					public class LightingLookupTableCtr
 					{
+						public enum InputCommandType : uint
+                        {
+							CosNormalHalf = 0,
+							CosViewHalf = 1,
+							CosNormalView = 2,
+							CosLightNormal = 3,
+							CosLightSpot = 4,
+							CosPhi = 5
+						}
+						public enum ScaleCommandType : uint
+                        {
+							One = 0,
+							Two = 1,
+							Four = 2,
+							Eight = 3,
+							Quarter = 6,
+							Half = 7
+                        }
 						public LightingLookupTableCtr(EndianBinaryReader er)
 						{
-							InputCommand = er.ReadUInt32();
-							ScaleCommand = er.ReadUInt32();
+							InputCommand = (InputCommandType)er.ReadUInt32();
+							ScaleCommand = (ScaleCommandType)er.ReadUInt32();
 							SamplerOffset = (UInt32)er.BaseStream.Position + er.ReadUInt32();
 
 							long curpos = er.BaseStream.Position;
@@ -2098,13 +2292,13 @@ namespace _3DS.NintendoWare.GFX
 						}
 						public void Write(EndianBinaryWriter er, CGFXWriterContext c)
 						{
-							er.Write(InputCommand);
-							er.Write(ScaleCommand);
+							er.Write(((uint)InputCommand));
+							er.Write((uint)ScaleCommand);
 							er.Write((uint)4);
 							Sampler.Write(er, c);
 						}
-						public UInt32 InputCommand;
-						public UInt32 ScaleCommand;
+						public InputCommandType InputCommand;
+						public ScaleCommandType ScaleCommand;
 						public UInt32 SamplerOffset;
 
 						public ReferenceLookupTableCtr Sampler;
@@ -2146,33 +2340,33 @@ namespace _3DS.NintendoWare.GFX
 						List<byte> lresult = new List<byte>();
 						if (ReflectanceRSampler != null)
 						{
-							lresult.AddRange(BitConverter.GetBytes(ReflectanceRSampler.InputCommand));
-							lresult.AddRange(BitConverter.GetBytes(ReflectanceRSampler.ScaleCommand));
+							lresult.AddRange(BitConverter.GetBytes(((uint)ReflectanceRSampler.InputCommand)));
+							lresult.AddRange(BitConverter.GetBytes((uint)ReflectanceRSampler.ScaleCommand));
 						}
 						if (ReflectanceGSampler != null)
 						{
-							lresult.AddRange(BitConverter.GetBytes(ReflectanceGSampler.InputCommand));
-							lresult.AddRange(BitConverter.GetBytes(ReflectanceGSampler.ScaleCommand));
+							lresult.AddRange(BitConverter.GetBytes(((uint)ReflectanceGSampler.InputCommand)));
+							lresult.AddRange(BitConverter.GetBytes((uint)ReflectanceGSampler.ScaleCommand));
 						}
 						if (ReflectanceBSampler != null)
 						{
-							lresult.AddRange(BitConverter.GetBytes(ReflectanceBSampler.InputCommand));
-							lresult.AddRange(BitConverter.GetBytes(ReflectanceBSampler.ScaleCommand));
+							lresult.AddRange(BitConverter.GetBytes(((uint)ReflectanceBSampler.InputCommand)));
+							lresult.AddRange(BitConverter.GetBytes((uint)ReflectanceBSampler.ScaleCommand));
 						}
 						if (Distribution0Sampler != null)
 						{
-							lresult.AddRange(BitConverter.GetBytes(Distribution0Sampler.InputCommand));
-							lresult.AddRange(BitConverter.GetBytes(Distribution0Sampler.ScaleCommand));
+							lresult.AddRange(BitConverter.GetBytes(((uint)Distribution0Sampler.InputCommand)));
+							lresult.AddRange(BitConverter.GetBytes((uint)Distribution0Sampler.ScaleCommand));
 						}
 						if (Distribution1Sampler != null)
 						{
-							lresult.AddRange(BitConverter.GetBytes(Distribution1Sampler.InputCommand));
-							lresult.AddRange(BitConverter.GetBytes(Distribution1Sampler.ScaleCommand));
+							lresult.AddRange(BitConverter.GetBytes(((uint)Distribution1Sampler.InputCommand)));
+							lresult.AddRange(BitConverter.GetBytes((uint)Distribution1Sampler.ScaleCommand));
 						}
 						if (FresnelSampler != null)
 						{
-							lresult.AddRange(BitConverter.GetBytes(FresnelSampler.InputCommand));
-							lresult.AddRange(BitConverter.GetBytes(FresnelSampler.ScaleCommand));
+							lresult.AddRange(BitConverter.GetBytes(((uint)FresnelSampler.InputCommand)));
+							lresult.AddRange(BitConverter.GetBytes((uint)FresnelSampler.ScaleCommand));
 						}
 						return CGFXWriterContext.CalcHash(lresult.ToArray());
 					}
@@ -2180,6 +2374,63 @@ namespace _3DS.NintendoWare.GFX
 
 				public class TextureCombinerCtr
 				{
+					public enum Operation
+                    {
+						Replace = 0,
+						Modulate = 1,
+						Add = 2,
+						AddSigned = 3,
+						Interpolate = 4,
+						Subtract = 5,
+						DotProduct3Rgb = 6,
+						DotProduct3Rgba = 7,
+						MultAdd = 8,
+						AddMult = 9
+					}
+					public enum Scale
+                    {
+						One = 0,
+						Two = 1,
+						Four = 2
+                    }
+					public enum Source
+                    {
+						PrimaryColor = 0,
+						FragmentPrimaryColor = 1,
+						FragmentSecondaryColor = 2,
+						Texture0 = 3,
+						Texture1 = 4,
+						Texture2 = 5,
+						Texture3 = 6,
+						PreviousBuffer = 13,
+						Constant = 14,
+						Previous = 15,
+					}
+					public enum OperandRGB
+                    {
+						Color = 0,
+						OneMinusColor = 1,
+						Alpha = 2,
+						OneMinusAlpha = 3,
+						Red = 4,
+						OneMinusRed = 5,
+						Green = 8,
+						OneMinusGreen = 9,
+						Blue = 12,
+						OneMinusBlue = 13
+					}
+					public enum OperandAlpha
+					{
+						Alpha = 0,
+						OneMinusAlpha = 1,
+						Red = 2,
+						OneMinusRed = 3,
+						Green = 4,
+						OneMinusGreen = 5,
+						Blue = 6,
+						OneMinusBlue = 7
+					}
+
 					private static readonly uint[] Addresses = { 0xC0, 0xC8, 0xD0, 0xD8, 0xF0, 0xF8 };
 					public TextureCombinerCtr(int Index)
 					{
@@ -2194,7 +2445,9 @@ namespace _3DS.NintendoWare.GFX
 						SrcRgb = er.ReadUInt16();
 						SrcAlpha = er.ReadUInt16();
 						Address = er.ReadUInt32();
-						Operands = er.ReadUInt32();
+						uint opr = er.ReadUInt32();
+						OprRgb = (ushort)(opr & 0xFFF);
+						OprAlpha = (ushort)((opr >> 12) & 0xFFF);
 						CombineRgb = er.ReadUInt16();
 						CombineAlpha = er.ReadUInt16();
 						ConstRgba = er.ReadColor8();
@@ -2207,7 +2460,9 @@ namespace _3DS.NintendoWare.GFX
 						er.Write(SrcRgb);
 						er.Write(SrcAlpha);
 						er.Write(Address);
-						er.Write(Operands);
+						uint opr = OprRgb;
+						opr |= (uint)(OprAlpha << 12);
+						er.Write(opr);
 						er.Write(CombineRgb);
 						er.Write(CombineAlpha);
 						er.WriteColor8(ConstRgba);
@@ -2218,16 +2473,101 @@ namespace _3DS.NintendoWare.GFX
 					public UInt16 SrcRgb;
 					public UInt16 SrcAlpha;
 					public UInt32 Address;
-					public UInt32 Operands;
+					public UInt16 OprRgb;
+					public UInt16 OprAlpha;
 					public UInt16 CombineRgb;
 					public UInt16 CombineAlpha;
 					public Color ConstRgba;
 					public UInt16 ScaleRgb;
 					public UInt16 ScaleAlpha;
+
+					public Operation OperationRGB
+                    {
+						get
+                        {
+							return (Operation)CombineRgb;
+                        }
+                    }
+					public Operation OperationA
+                    {
+						get
+                        {
+							return (Operation)CombineAlpha;
+                        }
+                    }
+					public Scale ScalationRGB
+                    {
+						get
+                        {
+							return (Scale)ScaleRgb;
+                        }
+                    }
+					public Scale ScalationA
+					{
+						get
+						{
+							return (Scale)ScaleAlpha;
+						}
+					}
+					public Source[] SourcesRGB
+                    {
+						get
+                        {
+							Source[] ret = new Source[3];
+							ret[0] = (Source)(SrcRgb & 0xF);
+							ret[1] = (Source)((SrcRgb >> 4) & 0xF);
+							ret[2] = (Source)((SrcRgb >> 8) & 0xF);
+							return ret;
+                        }
+                    }
+					public Source[] SourcesA
+					{
+						get
+						{
+							Source[] ret = new Source[3];
+							ret[0] = (Source)(SrcAlpha & 0xF);
+							ret[1] = (Source)((SrcAlpha >> 4) & 0xF);
+							ret[2] = (Source)((SrcAlpha >> 8) & 0xF);
+							return ret;
+						}
+					}
+					public OperandRGB[] OperandsRGB
+					{
+						get
+						{
+							OperandRGB[] ret = new OperandRGB[3];
+							ret[0] = (OperandRGB)(OprRgb & 0xF);
+							ret[1] = (OperandRGB)((OprRgb >> 4) & 0xF);
+							ret[2] = (OperandRGB)((OprRgb >> 8) & 0xF);
+							return ret;
+						}
+					}
+					public OperandAlpha[] OperandsA
+					{
+						get
+						{
+							OperandAlpha[] ret = new OperandAlpha[3];
+							ret[0] = (OperandAlpha)(OprAlpha & 0xF);
+							ret[1] = (OperandAlpha)((OprAlpha >> 4) & 0xF);
+							ret[2] = (OperandAlpha)((OprAlpha >> 8) & 0xF);
+							return ret;
+						}
+					}
 				}
 
 				public class AlphaTestCtr
 				{
+					public enum AlphaTestOperation
+                    {
+						Never = 0,
+						Always = 1,
+						Equal = 2,
+						NotEqual = 3,
+						Less = 4,
+						Lequal = 5,
+						Greater = 6,
+						Gequal = 7
+					}
 					public AlphaTestCtr()
 					{
 						Command1 = 0x11;//0x10;
@@ -2245,6 +2585,32 @@ namespace _3DS.NintendoWare.GFX
 					}
 					public UInt32 Command1;
 					public UInt32 Command2;
+
+					public bool AlphaTestEnabled
+                    {
+						get
+                        {
+							return (Command1 & 1) == 1;
+
+						}
+                    }
+
+					public AlphaTestOperation TestFunction
+                    {
+						get
+                        {
+							return (AlphaTestOperation)((Command1 >> 4) & 0xF);
+						}
+                    }
+
+					public float TestReference
+                    {
+						get
+                        {
+							return ((uint)(Command1 >> 8) - 0.5f) / 255f;
+                        }
+                    }
+
 					private readonly int[] GlAlphaFunc =
 							{
 								Gl.GL_NEVER,

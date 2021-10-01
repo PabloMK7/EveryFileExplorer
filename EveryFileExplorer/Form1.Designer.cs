@@ -299,6 +299,7 @@
             // 
             this.menuItem4.Index = 0;
             this.menuItem4.Text = "About...";
+            this.menuItem4.Click += new System.EventHandler(this.menuItem4_Click);
             // 
             // menuItem1
             // 

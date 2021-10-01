@@ -626,5 +626,10 @@ namespace EveryFileExplorer
                 if (File.Exists(sv.FileName)) MessageBox.Show("Convert Completed"); else MessageBox.Show("An Error while converting the file, run the command in the cmd to check the output");
             }
         }
+
+        private void menuItem4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

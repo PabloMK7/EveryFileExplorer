@@ -155,7 +155,7 @@ namespace MarioKart.MK7
             for(int i = 0; i < obj.Vertices.Count; i++)
             {
                 Vector3 v = obj.Vertices[i];
-                obj.Vertices[i] = new Vector3((float)Math.Round(v.X), (float)Math.Round(v.Y), (float)Math.Round(v.Z));
+                obj.Vertices[i] = new Vector3((float)Math.Round(v.X, 2), (float)Math.Round(v.Y, 2), (float)Math.Round(v.Z, 2));
             }
         }
 
