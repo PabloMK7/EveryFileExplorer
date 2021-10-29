@@ -15,15 +15,23 @@ namespace LibEveryFileExplorer
 		// Handle static properties
 		public override bool TryGetMember(GetMemberBinder binder, out object result)
 		{
-			PropertyInfo prop = _type.GetProperty(binder.Name, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public);
-			if (prop == null)
-			{
+			try
+            {
+				PropertyInfo prop = _type.GetProperty(binder.Name, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public);
+				if (prop == null)
+				{
+					result = null;
+					return false;
+				}
+
+				result = prop.GetValue(null, null);
+				return true;
+			} catch (Exception e)
+            {
 				result = null;
 				return false;
 			}
-
-			result = prop.GetValue(null, null);
-			return true;
+			
 		}
 
 		// Handle static methods

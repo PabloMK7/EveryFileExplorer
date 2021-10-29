@@ -65,7 +65,7 @@ namespace MarioKart.UI
                 {
                     ushort retVal = (byte)(Type & 0x1F);
                     retVal |= (ushort)((basicEf & 0x7) << 5);
-                    retVal |= (ushort)((shadow & 0xF) << 8);
+                    retVal |= (ushort)((shadow & 0x7) << 8);
                     retVal |= (ushort)((trickable ? 1 : 0) << 12);
                     if (pushback) retVal = (ushort)((retVal & 0x1FFF) | 0x2000);
                     else if (sticky) retVal = (ushort)((retVal & 0x1FFF) | 0x4000); 
@@ -76,7 +76,7 @@ namespace MarioKart.UI
                 {
                     Type = (byte)(value & 0x1F);
                     basicEf = (byte)((value >> 5) & 0x7);
-                    shadow = (byte)((value >> 8) & 0xF);
+                    shadow = (byte)((value >> 8) & 0x7);
                     trickable = ((value >> 12) & 1) == 1;
                     pushback = sticky = cannon = false;
                     if (((value >> 13) & 1) == 1) pushback = true;

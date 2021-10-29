@@ -34,6 +34,7 @@
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemTemplate = new Microsoft.VisualBasic.PowerPacks.DataRepeaterItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.descriptionLabel = new System.Windows.Forms.Label();
             this.cannonRadio = new System.Windows.Forms.RadioButton();
             this.trickableCheck = new System.Windows.Forms.CheckBox();
             this.normalRadio = new System.Windows.Forms.RadioButton();
@@ -46,7 +47,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.descriptionLabel1 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.descriptionLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -132,6 +132,16 @@
             this.splitContainer1.Size = new System.Drawing.Size(559, 315);
             this.splitContainer1.SplitterDistance = 205;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // descriptionLabel
+            // 
+            this.descriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.descriptionLabel.AutoSize = true;
+            this.descriptionLabel.Location = new System.Drawing.Point(79, 30);
+            this.descriptionLabel.Name = "descriptionLabel";
+            this.descriptionLabel.Size = new System.Drawing.Size(0, 13);
+            this.descriptionLabel.TabIndex = 12;
+            this.descriptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cannonRadio
             // 
@@ -224,20 +234,12 @@
             this.shadowComboBox.Items.AddRange(new object[] {
             "0x0 - Default Light",
             "0x1 - Default Shadow",
-            "0x2 - SARC Light 0",
-            "0x3 - SARC Light 1",
-            "0x4 - SARC Light 2",
-            "0x5 - SARC Light 3",
-            "0x6 - SARC Light 4",
-            "0x7 - SARC Light 5",
-            "0x8 - SARC Light 6",
-            "0x9 - SARC Light 7",
-            "0xA - SARC Light 8",
-            "0xB - SARC Light 9",
-            "0xC - SARC Light 10",
-            "0xD - SARC Light 11",
-            "0xE - SARC Light 12",
-            "0xF - SARC Light 13"});
+            "0x2 - SARC Light (ch5)",
+            "0x3 - SARC Light (ch4)",
+            "0x4 - SARC Light (ch3)",
+            "0x5 - SARC Light (ch2)",
+            "0x6 - SARC Light (ch1)",
+            "0x7 - SARC Light (ch0)"});
             this.shadowComboBox.Location = new System.Drawing.Point(82, 77);
             this.shadowComboBox.Name = "shadowComboBox";
             this.shadowComboBox.Size = new System.Drawing.Size(234, 21);
@@ -284,16 +286,6 @@
             this.label1.Size = new System.Drawing.Size(34, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Type:";
-            // 
-            // descriptionLabel
-            // 
-            this.descriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.descriptionLabel.AutoSize = true;
-            this.descriptionLabel.Location = new System.Drawing.Point(79, 30);
-            this.descriptionLabel.Name = "descriptionLabel";
-            this.descriptionLabel.Size = new System.Drawing.Size(0, 13);
-            this.descriptionLabel.TabIndex = 12;
-            this.descriptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // KCLCollisionTypeSelector
             // 
