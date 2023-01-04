@@ -9,6 +9,8 @@ using LibEveryFileExplorer.Files.SimpleFileSystem;
 using _3DS.UI;
 using LibEveryFileExplorer.IO;
 using LibEveryFileExplorer.IO.Serialization;
+using System.Security.Cryptography;
+using System.Collections;
 
 namespace _3DS
 {
@@ -185,7 +187,88 @@ namespace _3DS
 
 			public String Signature;
 			public UInt16 HeaderSize;
-			public UInt16 Unknown1;
+			public UInt16 Unknown1; // Probably padding, used for custom flags in EFE.
+
+			public bool CompressDuplicateFiles {
+				get
+				{
+					return (Unknown1 & 1) == 1;
+				}
+				set
+				{
+                    Unknown1 = (ushort)((Unknown1 & ~1) | (value ? 1 : 0));
+                }
+			}
+		}
+
+		private class SARCDataBuilder
+		{
+			private class FileEntry
+			{
+				public long position;
+				public FileEntry(long position)
+				{
+					this.position = position;
+				}
+			}
+
+            // From https://gist.github.com/manbeardgames/1d9b97278f71294b254e0b6672282dfd
+            public class ByteArrayComparer : IEqualityComparer<byte[]>
+            {
+                public bool Equals(byte[] obj1, byte[] obj2)
+                {
+                    return StructuralComparisons.StructuralEqualityComparer.Equals(obj1, obj2);
+                }
+                public int GetHashCode(byte[] obj)
+                {
+                    return StructuralComparisons.StructuralEqualityComparer.GetHashCode(obj);
+                }
+            }
+
+            public SARCDataBuilder(bool duplicateFileCompress)
+			{
+				DuplicateFileCompress = duplicateFileCompress;
+				FileDataHashes = new Dictionary<byte[], FileEntry>(new ByteArrayComparer());
+				MemoryStream = new MemoryStream();
+				MD5Provider = MD5.Create();
+			}
+
+			public long Append(SFSFile file)
+			{
+				if (DuplicateFileCompress)
+				{
+                    byte[] fileHash = MD5Provider.ComputeHash(file.Data);
+                    FileEntry outEntry;
+                    if (FileDataHashes.TryGetValue(fileHash, out outEntry))
+                    {
+                        return outEntry.position;
+                    }
+					while ((MemoryStream.Position % 128) != 0)
+						MemoryStream.WriteByte(0);
+					long start = MemoryStream.Position;
+					MemoryStream.Write(file.Data, 0, file.Data.Length);
+					outEntry = new FileEntry(start);
+					FileDataHashes.Add(fileHash, outEntry);
+					return start;
+                } else
+				{
+                    while ((MemoryStream.Position % 128) != 0)
+                        MemoryStream.WriteByte(0);
+                    long start = MemoryStream.Position;
+                    MemoryStream.Write(file.Data, 0, file.Data.Length);
+					return start;
+                }
+			}
+
+			public byte[] Get()
+			{
+				return MemoryStream.ToArray();
+			}
+
+			private bool DuplicateFileCompress = false;
+			private Dictionary<byte[], FileEntry> FileDataHashes;
+			private MemoryStream MemoryStream;
+			private MD5 MD5Provider;
 		}
 
 		public byte[] Data;
@@ -276,32 +359,27 @@ namespace _3DS
 			Header = new SARCHeader();
 			SFat = new SFAT();
 			SFat.NrEntries = (ushort)Root.Files.Count;
-			uint DataStart = 0;
+			bool CompressDuplicateFiles = SFnt != null ? SFnt.CompressDuplicateFiles : false;
+            SARCDataBuilder DataBuilder = new SARCDataBuilder(CompressDuplicateFiles);
             Root.Files.Sort(delegate (SFSFile a, SFSFile b) {
                 uint hasha = (uint)a.FileID;
                 uint hashb = (uint)b.FileID;
                 return hasha.CompareTo(hashb);
             });
-            foreach (var v in Root.Files)
+			foreach(var v in Root.Files)
 			{
-				while ((DataStart % 128) != 0) DataStart++;
                 uint hash = (uint)v.FileID;
-				SFat.Entries.Add(new SFAT.SFATEntry() { FileDataStart = DataStart, FileDataEnd = (uint)(DataStart + v.Data.Length), FileNameHash = hash, FileNameOffset = 0 });
-				DataStart += (uint)v.Data.Length;
-			}
-			Data = new byte[DataStart];
-			int i = 0;
-			foreach (var v in Root.Files)
-			{
-				Array.Copy(v.Data, 0, Data, SFat.Entries[i].FileDataStart, v.Data.Length);
-				i++;
-			}
-			SFnt = new SFNT();
-			Header.FileSize = (uint)(0x14 + 0xC + SFat.NrEntries * 0x10 + 0x8);
-			while ((Header.FileSize % 128) != 0) Header.FileSize++;
-			Header.FileDataOffset = Header.FileSize;
-			Header.FileSize += (uint)Data.Length;
-		}
+				long DataStart = DataBuilder.Append(v);
+                SFat.Entries.Add(new SFAT.SFATEntry() { FileDataStart = (uint)DataStart, FileDataEnd = (uint)(DataStart + v.Data.Length), FileNameHash = hash, FileNameOffset = 0 });
+            }
+			Data = DataBuilder.Get();
+            SFnt = new SFNT();
+			SFnt.CompressDuplicateFiles = CompressDuplicateFiles;
+            Header.FileSize = (uint)(0x14 + 0xC + SFat.NrEntries * 0x10 + 0x8);
+            while ((Header.FileSize % 128) != 0) Header.FileSize++;
+            Header.FileDataOffset = Header.FileSize;
+            Header.FileSize += (uint)Data.Length;
+        }
 
         public class SARCIdentifier : FileFormatIdentifier
         {

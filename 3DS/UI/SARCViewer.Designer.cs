@@ -44,6 +44,7 @@
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.duplicateFileCompression = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -56,7 +57,8 @@
             this.menuItem2.Index = 0;
             this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem3,
-            this.menuExportDir});
+            this.menuExportDir,
+            this.duplicateFileCompression});
             this.menuItem2.MergeOrder = 3;
             this.menuItem2.MergeType = System.Windows.Forms.MenuMerge.MergeItems;
             this.menuItem2.Text = "Tools";
@@ -134,6 +136,12 @@
             // 
             this.folderBrowserDialog1.Description = "Select the directory to export the content of current directory to.";
             // 
+            // duplicateFileCompression
+            // 
+            this.duplicateFileCompression.Index = 2;
+            this.duplicateFileCompression.Text = "Compress Duplicate Files";
+            this.duplicateFileCompression.Click += new System.EventHandler(this.sarcFileCompression_Click);
+            // 
             // SARCViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -166,5 +174,6 @@
 		private System.Windows.Forms.MenuItem menuItem7;
 		private System.Windows.Forms.MenuItem menuItem8;
 		private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.MenuItem duplicateFileCompression;
     }
 }

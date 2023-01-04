@@ -32,6 +32,7 @@ namespace _3DS.UI
             fileBrowser1.DeleteEnabled = false;
             fileBrowser1.RenameEnabled = false;
             fileBrowser1.UpdateDirectories(Root.GetTreeNodes());
+            duplicateFileCompression.Checked = (Archive.SFnt.Unknown1 & 1) == 1;
 		}
 
 		private void fileBrowser1_OnDirectoryChanged(string Path)
@@ -193,6 +194,13 @@ namespace _3DS.UI
                 Archive.FromFileSystem(Root);
                 fileBrowser1.UpdateDirectories(Root.GetTreeNodes(), true);
             }
+        }
+
+        private void sarcFileCompression_Click(object sender, EventArgs e)
+        {
+            duplicateFileCompression.Checked = !duplicateFileCompression.Checked;
+            Archive.SFnt.CompressDuplicateFiles = duplicateFileCompression.Checked;
+            Archive.FromFileSystem(Root);
         }
     }
 }
