@@ -14,8 +14,16 @@ namespace _3DS.UI
 {
 	public partial class SARCViewer : Form, IChildReactive
 	{
-		SARC Archive;
-		SFSDirectory Root;
+
+        private static List<Action<SARCViewer>> guessSarcHints = new List<Action<SARCViewer>>();
+
+        public static void AddSARCNameGuessHint(Action<SARCViewer> action)
+        {
+            guessSarcHints.Add(action);
+        }
+
+		public SARC Archive;
+		public SFSDirectory Root;
 		public SARCViewer(SARC Archive)
 		{
 			this.Archive = Archive;
@@ -26,6 +34,7 @@ namespace _3DS.UI
 		{
             Archive.SarcFilename = (this.Tag as ViewableFile).File.Name;
             Root = Archive.ToFileSystem();
+            RunHintProviders();
             fileBrowser1.ShowAddFileButton = true;
             fileBrowser1.ShowDeleteButton = true;
             fileBrowser1.ShowRenameButton = true;
@@ -158,6 +167,7 @@ namespace _3DS.UI
                     }
                     newfile.Data = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
                     Root.Files.Add(newfile);
+                    RunHintProviders();
                     Archive.FromFileSystem(Root);
                     fileBrowser1.UpdateDirectories(Root.GetTreeNodes(), true);
                 }
@@ -191,6 +201,7 @@ namespace _3DS.UI
                         }
                     }
                 }
+                RunHintProviders();
                 Archive.FromFileSystem(Root);
                 fileBrowser1.UpdateDirectories(Root.GetTreeNodes(), true);
             }
@@ -201,6 +212,14 @@ namespace _3DS.UI
             duplicateFileCompression.Checked = !duplicateFileCompression.Checked;
             Archive.SFnt.CompressDuplicateFiles = duplicateFileCompression.Checked;
             Archive.FromFileSystem(Root);
+        }
+
+        private void RunHintProviders()
+        {
+            foreach (var hint in guessSarcHints)
+            {
+                hint(this);
+            }
         }
     }
 }

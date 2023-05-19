@@ -35,6 +35,8 @@
             this.listView1 = new LibEveryFileExplorer.UI.ListViewNF();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.importTableButton = new System.Windows.Forms.ToolStripButton();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -42,7 +44,8 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
-            this.toolStripButton2});
+            this.toolStripButton2,
+            this.importTableButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(487, 25);
@@ -77,6 +80,7 @@
             this.columnHeader2});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.GridLines = true;
+            this.listView1.HideSelection = false;
             this.listView1.LabelEdit = true;
             this.listView1.Location = new System.Drawing.Point(0, 25);
             this.listView1.Name = "listView1";
@@ -95,6 +99,22 @@
             // 
             this.columnHeader2.Text = "Hash";
             this.columnHeader2.Width = 100;
+            // 
+            // importTableButton
+            // 
+            this.importTableButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.importTableButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.importTableButton.Image = ((System.Drawing.Image)(resources.GetObject("importTableButton.Image")));
+            this.importTableButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.importTableButton.Name = "importTableButton";
+            this.importTableButton.Size = new System.Drawing.Size(77, 22);
+            this.importTableButton.Text = "Import Table";
+            this.importTableButton.Click += new System.EventHandler(this.importTableButton_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "SARC Hash Table|*.saht|All Files|*.*";
             // 
             // SAHTViewer
             // 
@@ -121,5 +141,7 @@
 		private System.Windows.Forms.ColumnHeader columnHeader2;
 		private System.Windows.Forms.ToolStripButton toolStripButton1;
 		private System.Windows.Forms.ToolStripButton toolStripButton2;
-	}
+        private System.Windows.Forms.ToolStripButton importTableButton;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+    }
 }

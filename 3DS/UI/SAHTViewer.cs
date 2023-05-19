@@ -60,5 +60,16 @@ namespace _3DS.UI
 			HashTable.Entries.RemoveAt(listView1.SelectedIndices[0]);
 			UpdateEntries();
 		}
+
+		private void importTableButton_Click(object sender, EventArgs e)
+		{
+			if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK
+				   && openFileDialog1.FileName.Length > 0)
+			{
+				SARCHashTable newTable = new SARCHashTable(System.IO.File.ReadAllBytes(openFileDialog1.FileName));
+				HashTable.Merge(newTable);
+				UpdateEntries();
+			}
+		}
     }
 }

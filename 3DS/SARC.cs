@@ -300,14 +300,14 @@ namespace _3DS
 			return null;
 		}
 
-		public UInt32 GetHashFromName(String Name)
+		public UInt32 GetHashFromName(String Name, UInt32 start = 0)
 		{
-			return GetHashFromName(Name, SFat.HashMultiplier);
+			return GetHashFromName(Name, SFat.HashMultiplier, start);
 		}
 
-		public static UInt32 GetHashFromName(String Name, UInt32 HashMultiplier)
+		public static UInt32 GetHashFromName(String Name, UInt32 HashMultiplier, UInt32 start = 0)
 		{
-			uint res = 0;
+			uint res = start;
 			for (int i = 0; i < Name.Length; i++)
 			{
 				res = Name[i] + res * HashMultiplier;

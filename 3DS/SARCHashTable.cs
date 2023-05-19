@@ -15,14 +15,14 @@ namespace _3DS
 	{
 		public static SARCHashTable DefaultHashTable;
 
-		static SARCHashTable()
+        static SARCHashTable()
 		{
 			try
 			{
 				String path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Plugins\\HashTable.saht";
 				if (File.Exists(path)) DefaultHashTable = new SARCHashTable(File.ReadAllBytes(path));
 				else DefaultHashTable = null;
-			}
+            }
 			catch
 			{
 				DefaultHashTable = null;
@@ -165,6 +165,25 @@ namespace _3DS
 		{
 			foreach (var v in Entries) if (v.Name == Name) return v;
 			return null;
+		}
+
+		public void Merge(SARCHashTable other)
+		{
+			List<SAHTEntry> pending = new List<SAHTEntry>();
+			foreach (var entry in other.Entries)
+			{
+				if (GetEntryByHash(entry.Hash) == null)
+				{
+					pending.Add(entry);
+				}
+			}
+			if (pending.Count == 0)
+				return;
+			foreach(var entry in pending)
+			{
+				Entries.Add(entry);
+			}
+			SortEntriesByHash();
 		}
 
 		public class SAHTIdentifier : FileFormatIdentifier

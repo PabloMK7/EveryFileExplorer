@@ -34,6 +34,7 @@
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.menuExportDir = new System.Windows.Forms.MenuItem();
+            this.duplicateFileCompression = new System.Windows.Forms.MenuItem();
             this.menuReplace = new System.Windows.Forms.MenuItem();
             this.menuExport = new System.Windows.Forms.MenuItem();
             this.fileBrowser1 = new LibEveryFileExplorer.UI.FileBrowser();
@@ -44,7 +45,6 @@
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.duplicateFileCompression = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -73,6 +73,12 @@
             this.menuExportDir.Index = 1;
             this.menuExportDir.Text = "Export Directory Content...";
             this.menuExportDir.Click += new System.EventHandler(this.menuExportDir_Click);
+            // 
+            // duplicateFileCompression
+            // 
+            this.duplicateFileCompression.Index = 2;
+            this.duplicateFileCompression.Text = "Compress Duplicate Files";
+            this.duplicateFileCompression.Click += new System.EventHandler(this.sarcFileCompression_Click);
             // 
             // menuReplace
             // 
@@ -135,12 +141,6 @@
             // folderBrowserDialog1
             // 
             this.folderBrowserDialog1.Description = "Select the directory to export the content of current directory to.";
-            // 
-            // duplicateFileCompression
-            // 
-            this.duplicateFileCompression.Index = 2;
-            this.duplicateFileCompression.Text = "Compress Duplicate Files";
-            this.duplicateFileCompression.Click += new System.EventHandler(this.sarcFileCompression_Click);
             // 
             // SARCViewer
             // 
