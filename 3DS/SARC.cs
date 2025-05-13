@@ -73,7 +73,8 @@ namespace _3DS
 				Endianness = 0xFFFE;//0xFEFF;
 				FileSize = 0;
 				FileDataOffset = 0;
-				Unknown = 0x0100;
+				Version = 0x0100;
+				Reserved = 0;
 			}
 			public SARCHeader(EndianBinaryReaderEx er)
 			{
@@ -88,7 +89,8 @@ namespace _3DS
 				if (Endianness == 0xFFFE) er.Endianness = LibEveryFileExplorer.IO.Endianness.LittleEndian;
 				er.Write(FileSize);
 				er.Write(FileDataOffset);
-				er.Write(Unknown);
+				er.Write(Version);
+				er.Write(Reserved);
 			}
 			[BinaryStringSignature("SARC")]
 			[BinaryFixedSize(4)]
@@ -98,7 +100,8 @@ namespace _3DS
 			public UInt16 Endianness;
 			public UInt32 FileSize;
 			public UInt32 FileDataOffset;
-			public UInt32 Unknown;
+			public UInt16 Version;
+			public UInt16 Reserved;
 		}
 
 		public SFAT SFat;
@@ -192,17 +195,29 @@ namespace _3DS
 			public bool CompressDuplicateFiles {
 				get
 				{
-					return (Unknown1 & 1) == 1;
+					return (Unknown1 & 1) != 0;
 				}
 				set
 				{
                     Unknown1 = (ushort)((Unknown1 & ~1) | (value ? 1 : 0));
                 }
 			}
+			public bool HashEntireFile
+			{
+                get
+                {
+                    return (Unknown1 & 2) != 0;
+                }
+                set
+                {
+                    Unknown1 = (ushort)((Unknown1 & ~2) | (value ? 2 : 0));
+                }
+            }
 		}
 
 		private class SARCDataBuilder
 		{
+			private bool HashFile = false;
 			private class FileEntry
 			{
 				public long position;
@@ -225,12 +240,21 @@ namespace _3DS
                 }
             }
 
-            public SARCDataBuilder(bool duplicateFileCompress)
+            public SARCDataBuilder(bool duplicateFileCompress, bool StoreFileHash)
 			{
 				DuplicateFileCompress = duplicateFileCompress;
 				FileDataHashes = new Dictionary<byte[], FileEntry>(new ByteArrayComparer());
 				MemoryStream = new MemoryStream();
 				MD5Provider = MD5.Create();
+				HashFile = StoreFileHash;
+				if (HashFile) {
+					// Make room for the hash
+					for (int i = 0; i < 8; i++)
+						MemoryStream.WriteByte(0);
+
+                    while ((MemoryStream.Position % 128) != 0)
+                        MemoryStream.WriteByte(0);
+                }
 			}
 
 			public long Append(SFSFile file)
@@ -258,6 +282,39 @@ namespace _3DS
                     MemoryStream.Write(file.Data, 0, file.Data.Length);
 					return start;
                 }
+			}
+
+			public void UpdateFullFileHash()
+			{
+				if (!HashFile)
+					return;
+
+				var position = MemoryStream.Position;
+
+				MemoryStream.Position = 128;
+				UInt32 hash1 = 0, hash2 = 0;
+                byte[] buffer = new byte[4];
+				long size = MemoryStream.Length - 128;
+				// Align size to the next multiple of 8,
+				// 0 will be read for the padding bytes.
+				size = (size + 7) & ~7L;
+                for (int i = 0; i < size / sizeof(UInt32); i+=2)
+				{
+					buffer[0] = buffer[1] = buffer[2] = buffer[3] = 0;
+					MemoryStream.Read(buffer, 0, 4);
+					var data1 = BitConverter.ToUInt32(buffer, 0);
+                    buffer[0] = buffer[1] = buffer[2] = buffer[3] = 0;
+                    MemoryStream.Read(buffer, 0, 4);
+                    var data2 = BitConverter.ToUInt32(buffer, 0);
+
+					hash1 += data1 * 47U;
+					hash2 += data2 * 47U;
+                }
+
+				var finalHash = BitConverter.GetBytes((UInt64)hash1 | ((UInt64)hash2 << 32));
+				MemoryStream.Position = 0;
+				MemoryStream.Write(finalHash, 0, finalHash.Length);
+				MemoryStream.Position = position;
 			}
 
 			public byte[] Get()
@@ -360,7 +417,8 @@ namespace _3DS
 			SFat = new SFAT();
 			SFat.NrEntries = (ushort)Root.Files.Count;
 			bool CompressDuplicateFiles = SFnt != null ? SFnt.CompressDuplicateFiles : false;
-            SARCDataBuilder DataBuilder = new SARCDataBuilder(CompressDuplicateFiles);
+            bool HashEntireFile = SFnt != null ? SFnt.HashEntireFile : false;
+            SARCDataBuilder DataBuilder = new SARCDataBuilder(CompressDuplicateFiles, HashEntireFile);
             Root.Files.Sort(delegate (SFSFile a, SFSFile b) {
                 uint hasha = (uint)a.FileID;
                 uint hashb = (uint)b.FileID;
@@ -372,9 +430,12 @@ namespace _3DS
 				long DataStart = DataBuilder.Append(v);
                 SFat.Entries.Add(new SFAT.SFATEntry() { FileDataStart = (uint)DataStart, FileDataEnd = (uint)(DataStart + v.Data.Length), FileNameHash = hash, FileNameOffset = 0 });
             }
+			if (HashEntireFile)
+				DataBuilder.UpdateFullFileHash();
 			Data = DataBuilder.Get();
             SFnt = new SFNT();
 			SFnt.CompressDuplicateFiles = CompressDuplicateFiles;
+			SFnt.HashEntireFile = HashEntireFile;
             Header.FileSize = (uint)(0x14 + 0xC + SFat.NrEntries * 0x10 + 0x8);
             while ((Header.FileSize % 128) != 0) Header.FileSize++;
             Header.FileDataOffset = Header.FileSize;

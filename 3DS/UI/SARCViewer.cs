@@ -41,7 +41,8 @@ namespace _3DS.UI
             fileBrowser1.DeleteEnabled = false;
             fileBrowser1.RenameEnabled = false;
             fileBrowser1.UpdateDirectories(Root.GetTreeNodes());
-            duplicateFileCompression.Checked = (Archive.SFnt.Unknown1 & 1) == 1;
+            duplicateFileCompression.Checked = Archive.SFnt.CompressDuplicateFiles;
+            storeFullFileHash.Checked = Archive.SFnt.HashEntireFile;
 		}
 
 		private void fileBrowser1_OnDirectoryChanged(string Path)
@@ -220,6 +221,13 @@ namespace _3DS.UI
             {
                 hint(this);
             }
+        }
+
+        private void storeFullFileHash_Click(object sender, EventArgs e)
+        {
+            storeFullFileHash.Checked = !storeFullFileHash.Checked;
+            Archive.SFnt.HashEntireFile = storeFullFileHash.Checked;
+            Archive.FromFileSystem(Root);
         }
     }
 }

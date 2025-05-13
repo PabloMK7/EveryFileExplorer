@@ -35,6 +35,7 @@
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.menuExportDir = new System.Windows.Forms.MenuItem();
             this.duplicateFileCompression = new System.Windows.Forms.MenuItem();
+            this.storeFullFileHash = new System.Windows.Forms.MenuItem();
             this.menuReplace = new System.Windows.Forms.MenuItem();
             this.menuExport = new System.Windows.Forms.MenuItem();
             this.fileBrowser1 = new LibEveryFileExplorer.UI.FileBrowser();
@@ -58,7 +59,8 @@
             this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem3,
             this.menuExportDir,
-            this.duplicateFileCompression});
+            this.duplicateFileCompression,
+            this.storeFullFileHash});
             this.menuItem2.MergeOrder = 3;
             this.menuItem2.MergeType = System.Windows.Forms.MenuMerge.MergeItems;
             this.menuItem2.Text = "Tools";
@@ -79,6 +81,12 @@
             this.duplicateFileCompression.Index = 2;
             this.duplicateFileCompression.Text = "Compress Duplicate Files";
             this.duplicateFileCompression.Click += new System.EventHandler(this.sarcFileCompression_Click);
+            // 
+            // storeFullFileHash
+            // 
+            this.storeFullFileHash.Index = 3;
+            this.storeFullFileHash.Text = "Store Full File Hash";
+            this.storeFullFileHash.Click += new System.EventHandler(this.storeFullFileHash_Click);
             // 
             // menuReplace
             // 
@@ -175,5 +183,6 @@
 		private System.Windows.Forms.MenuItem menuItem8;
 		private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.MenuItem duplicateFileCompression;
+        private System.Windows.Forms.MenuItem storeFullFileHash;
     }
 }
